@@ -58,7 +58,7 @@ Set AutoLinkTextView click listener
 ```java
 autoLinkTextView.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
             @Override
-            public void onAutoLinkTextClick(AutoLinkMode autoLinkMode, String matchedText) {
+            public void onAutoLinkTextClick(AutoLinkMode mode, String matchedText) {
 
             }
         });

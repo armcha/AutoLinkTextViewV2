@@ -1,14 +1,16 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+//apply plugin: 'com.novoda.bintray-release'
 
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion 16
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
     }
@@ -22,15 +24,20 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-annotations:25.0.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation "androidx.core:core-ktx:1.1.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
 
-publish {
-    groupId = 'com.github.armcha'
-    artifactId = 'AutoLinkTextView'
-    publishVersion = '0.3.0'
-    desc = 'Auto Link Text View'
-    licences = ['MIT']
-    website = 'https://github.com/armcha/AutoLinkTextView'
-}
+//publish {
+//    groupId = 'com.github.armcha'
+//    artifactId = 'AutoLinkTextView'
+//    publishVersion = '0.3.0'
+//    desc = 'Auto Link Text View'
+//    licences = ['MIT']
+//    website = 'https://github.com/armcha/AutoLinkTextView'
+//}
