@@ -2,14 +2,12 @@ package com.luseen.autolinklibrary
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.text.DynamicLayout
 import android.text.SpannableString
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.StaticLayout
 import android.text.TextUtils
 import android.text.style.CharacterStyle
-import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
@@ -94,12 +92,11 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     }
 
     private fun matchedRanges(text: CharSequence): Set<AutoLinkItem> {
-
-        val autoLinkItems = mutableSetOf<AutoLinkItem>()
-
         if (modes.isEmpty()) {
             throw NullPointerException("Please add at least one mode")
         }
+
+        val autoLinkItems = mutableSetOf<AutoLinkItem>()
 
         modes.sortedBy { it.modeName }
                 .forEach {

@@ -3,10 +3,7 @@ package com.luseen.activetextview
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.style.BackgroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
-import android.text.style.UnderlineSpan
+import android.text.style.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -31,12 +28,13 @@ class MainActivity : AppCompatActivity() {
         autoLinkTextView.addSpan(MODE_URL, StyleSpan(Typeface.BOLD), UnderlineSpan())
         autoLinkTextView.addSpan(MODE_PHONE, RelativeSizeSpan(0.5f))
         autoLinkTextView.addSpan(custom, BackgroundColorSpan(Color.BLUE))
+        autoLinkTextView.addSpan(custom, ForegroundColorSpan(ContextCompat.getColor(this, R.color.color2)))
 
-        autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color2)
-        autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
-        autoLinkTextView.customModeColor = ContextCompat.getColor(this, R.color.color1)
-        autoLinkTextView.mentionModeColor = ContextCompat.getColor(this, R.color.color5)
-        autoLinkTextView.emailModeColor = ContextCompat.getColor(this, R.color.colorPrimary)
+//        autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color2)
+//        autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
+//        autoLinkTextView.customModeColor = ContextCompat.getColor(this, R.color.color1)
+//        autoLinkTextView.mentionModeColor = ContextCompat.getColor(this, R.color.color5)
+//        autoLinkTextView.emailModeColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
         autoLinkTextView.text = getString(R.string.long_text)
 
