@@ -1,35 +1,44 @@
 package com.luseen.activetextview
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.style.BackgroundColorSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
+import android.text.style.UnderlineSpan
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.luseen.autolinklibrary.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val autoLinkTextView = findViewById<AutoLinkTextView>(R.id.active)
 
+        val custom = MODE_CUSTOM("\\sAllo\\b")
         autoLinkTextView.addAutoLinkMode(
                 MODE_HASHTAG,
                 MODE_PHONE,
                 MODE_URL,
                 MODE_EMAIL,
                 MODE_MENTION,
-                MODE_CUSTOM("\\sAllo\\b"))
+                custom)
 
-        autoLinkTextView.setBoldAutoLinkModes(MODE_HASHTAG)
-        autoLinkTextView.setUnderLineAutoLinkModes(MODE_URL, MODE_HASHTAG)
+        autoLinkTextView.addSpan(MODE_URL, StyleSpan(Typeface.BOLD), UnderlineSpan())
+        autoLinkTextView.addSpan(MODE_PHONE, RelativeSizeSpan(0.5f))
+        autoLinkTextView.addSpan(custom, BackgroundColorSpan(Color.BLUE))
 
-        autoLinkTextView.setHashTagModeColor(ContextCompat.getColor(this, R.color.color2))
-        autoLinkTextView.setPhoneModeColor(ContextCompat.getColor(this, R.color.color3))
-        autoLinkTextView.setCustomModeColor(ContextCompat.getColor(this, R.color.color1))
-        autoLinkTextView.setMentionModeColor(ContextCompat.getColor(this, R.color.color5))
+        autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color2)
+        autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
+        autoLinkTextView.customModeColor = ContextCompat.getColor(this, R.color.color1)
+        autoLinkTextView.mentionModeColor = ContextCompat.getColor(this, R.color.color5)
+        autoLinkTextView.emailModeColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
-        autoLinkTextView.text = getString(R.string.aaaaaaa)
+        autoLinkTextView.text = getString(R.string.long_text)
 
         autoLinkTextView.onAutoLinkClick { mode, matchedText ->
             showDialog(mode.modeName, matchedText)

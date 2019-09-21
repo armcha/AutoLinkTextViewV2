@@ -1,22 +1,13 @@
 package com.luseen.autolinklibrary
 
-sealed class Mode(val modeName: String, internal val autoLinkMode: AutoLinkMode)
+sealed class Mode(val modeName: String)
 
-object MODE_HASHTAG : Mode("Hashtag", AutoLinkMode.HASH_TAG)
-object MODE_MENTION : Mode("Mention", AutoLinkMode.MENTION)
-object MODE_URL : Mode("Url", AutoLinkMode.URL)
-object MODE_PHONE : Mode("Phone", AutoLinkMode.PHONE)
-object MODE_EMAIL : Mode("Email", AutoLinkMode.EMAIL)
-class MODE_CUSTOM(val regex: String) : Mode("Custom", AutoLinkMode.CUSTOM)
+object MODE_HASHTAG : Mode("Hashtag")
+object MODE_MENTION : Mode("Mention")
+object MODE_URL : Mode("Url")
+object MODE_PHONE : Mode("Phone")
+object MODE_EMAIL : Mode("Email")
+class MODE_CUSTOM(val regex: String) : Mode("Custom")
 
-internal sealed class AutoLinkMode {
-
-    object HASH_TAG : AutoLinkMode()
-    object MENTION : AutoLinkMode()
-    object URL : AutoLinkMode()
-    object PHONE : AutoLinkMode()
-    object EMAIL : AutoLinkMode()
-    object CUSTOM : AutoLinkMode()
-}
 
 

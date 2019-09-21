@@ -3,40 +3,38 @@ package com.luseen.autolinklibrary
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.text.*
+import android.text.DynamicLayout
+import android.text.SpannableString
+import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+import android.text.StaticLayout
+import android.text.TextUtils
 import android.text.style.CharacterStyle
 import android.text.style.StyleSpan
-import android.text.style.TypefaceSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
-import androidx.annotation.ColorInt
 import java.lang.reflect.Field
 import java.util.regex.Matcher
 
 class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView(context, attrs) {
 
     companion object {
-
         internal val TAG = AutoLinkTextView::class.java.simpleName
-
         private const val MIN_PHONE_NUMBER_LENGTH = 8
-
         private const val DEFAULT_COLOR = Color.RED
     }
 
     private var onAutoLinkClick: ((Mode, String) -> Unit)? = null
     private var modes: MutableList<Mode> = mutableListOf()
-    private var boldModes: MutableList<Mode> = mutableListOf()
-    private var underLineModes: MutableList<Mode> = mutableListOf()
-    private var mentionModeColor = DEFAULT_COLOR
-    private var hashTagModeColor = DEFAULT_COLOR
-    private var urlModeColor = DEFAULT_COLOR
-    private var phoneModeColor = DEFAULT_COLOR
-    private var emailModeColor = DEFAULT_COLOR
-    private var customModeColor = DEFAULT_COLOR
     private var defaultSelectedColor = Color.LTGRAY
-    private var spanMap = mutableMapOf<Mode, CharacterStyle>()
+    private var spanMap = mutableMapOf<Mode, List<CharacterStyle>>()
+
+    var mentionModeColor = DEFAULT_COLOR
+    var hashTagModeColor = DEFAULT_COLOR
+    var urlModeColor = DEFAULT_COLOR
+    var phoneModeColor = DEFAULT_COLOR
+    var emailModeColor = DEFAULT_COLOR
+    var customModeColor = DEFAULT_COLOR
 
     override fun setHighlightColor(color: Int) {
         super.setHighlightColor(Color.TRANSPARENT)
@@ -52,59 +50,74 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         super.setText(spannableString, type)
     }
 
+    fun addAutoLinkMode(vararg modes: Mode) {
+        this.modes.addAll(modes)
+    }
+
+    fun addSpan(mode: Mode, vararg spans: CharacterStyle) {
+        spanMap[mode] = spanMap[mode]?.plus(spans) ?: spans.toList()
+    }
+
+    fun onAutoLinkClick(body: (Mode, String) -> Unit) {
+        onAutoLinkClick = body
+    }
+
     private fun makeSpannableString(text: CharSequence): SpannableString {
 
         val spannableString = SpannableString(text)
         val autoLinkItems = matchedRanges(text)
 
         fun SpannableString.addSpan(span: Any, autoLinkItem: AutoLinkItem) {
-            setSpan(span, autoLinkItem.startPoint, autoLinkItem.endPoint,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(span, autoLinkItem.startPoint, autoLinkItem.endPoint, SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         for (autoLinkItem in autoLinkItems) {
-            val currentColor = getColorByMode(autoLinkItem.mode)
-            val isUnderLineEnabled = underLineModes.contains(autoLinkItem.mode)
+            val mode = autoLinkItem.mode
+            val currentColor = getColorByMode(mode)
 
-            val clickableSpan = object : TouchableSpan(currentColor, defaultSelectedColor, isUnderLineEnabled) {
+            val clickableSpan = object : TouchableSpan(currentColor, defaultSelectedColor) {
                 override fun onClick(widget: View) {
-                    onAutoLinkClick?.invoke(autoLinkItem.mode, autoLinkItem.matchedText)
+                    onAutoLinkClick?.invoke(mode, autoLinkItem.matchedText)
                 }
             }
 
             spannableString.addSpan(clickableSpan, autoLinkItem)
 
-            if (boldModes.contains(autoLinkItem.mode)) {
-                spannableString.addSpan(StyleSpan(Typeface.BOLD), autoLinkItem)
+            val spans = spanMap[mode]
+            if (spans != null && spans.isNotEmpty()) {
+                spans.forEach {
+                    spannableString.addSpan(CharacterStyle.wrap(it), autoLinkItem)
+                }
             }
-            spannableString.addSpan(TypefaceSpan("monospace"), autoLinkItem)
         }
         return spannableString
     }
 
-    private fun matchedRanges(text: CharSequence): List<AutoLinkItem> {
+    private fun matchedRanges(text: CharSequence): Set<AutoLinkItem> {
 
-        val autoLinkItems = mutableListOf<AutoLinkItem>()
+        val autoLinkItems = mutableSetOf<AutoLinkItem>()
 
         if (modes.isEmpty()) {
             throw NullPointerException("Please add at least one mode")
         }
 
-        modes.forEach {
-            val matcher = it.toPattern().matcher(text)
-            if (it.autoLinkMode == AutoLinkMode.PHONE) {
-                while (matcher.find())
-                    if (matcher.group().length > MIN_PHONE_NUMBER_LENGTH)
-                        addAutoLinkItem(matcher, autoLinkItems, it)
-            } else {
-                while (matcher.find())
-                    addAutoLinkItem(matcher, autoLinkItems, it)
-            }
-        }
+        modes.sortedBy { it.modeName }
+                .forEach {
+                    val matcher = it.toPattern().matcher(text)
+                    if (it is MODE_PHONE) {
+                        while (matcher.find())
+                            if (matcher.group().length > MIN_PHONE_NUMBER_LENGTH)
+                                addAutoLinkItem(matcher, autoLinkItems, it)
+                    } else {
+                        while (matcher.find()) {
+                            addAutoLinkItem(matcher, autoLinkItems, it)
+                        }
+                    }
+                }
         return autoLinkItems
     }
 
-    private fun addAutoLinkItem(matcher: Matcher, autoLinkItems: MutableList<AutoLinkItem>, mode: Mode) {
+    private fun addAutoLinkItem(matcher: Matcher, autoLinkItems: MutableSet<AutoLinkItem>, mode: Mode) {
         autoLinkItems.add(AutoLinkItem(
                 matcher.start(),
                 matcher.end(),
@@ -113,62 +126,14 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     }
 
     private fun getColorByMode(mode: Mode): Int {
-        return when (mode.autoLinkMode) {
-            AutoLinkMode.HASH_TAG -> hashTagModeColor
-            AutoLinkMode.MENTION -> mentionModeColor
-            AutoLinkMode.URL -> urlModeColor
-            AutoLinkMode.PHONE -> phoneModeColor
-            AutoLinkMode.EMAIL -> emailModeColor
-            AutoLinkMode.CUSTOM -> customModeColor
+        return when (mode) {
+            is MODE_HASHTAG -> hashTagModeColor
+            is MODE_MENTION -> mentionModeColor
+            is MODE_URL -> urlModeColor
+            is MODE_PHONE -> phoneModeColor
+            is MODE_EMAIL -> emailModeColor
+            is MODE_CUSTOM -> customModeColor
         }
-    }
-
-    fun setMentionModeColor(@ColorInt mentionModeColor: Int) {
-        this.mentionModeColor = mentionModeColor
-    }
-
-    fun setHashTagModeColor(@ColorInt hashTagModeColor: Int) {
-        this.hashTagModeColor = hashTagModeColor
-    }
-
-    fun setUrlModeColor(@ColorInt urlModeColor: Int) {
-        this.urlModeColor = urlModeColor
-    }
-
-    fun setPhoneModeColor(@ColorInt phoneModeColor: Int) {
-        this.phoneModeColor = phoneModeColor
-    }
-
-    fun setEmailModeColor(@ColorInt emailModeColor: Int) {
-        this.emailModeColor = emailModeColor
-    }
-
-    fun setCustomModeColor(@ColorInt customModeColor: Int) {
-        this.customModeColor = customModeColor
-    }
-
-    fun setSelectedStateColor(@ColorInt defaultSelectedColor: Int) {
-        this.defaultSelectedColor = defaultSelectedColor
-    }
-
-    fun addAutoLinkMode(vararg modes: Mode) {
-        this.modes.addAll(modes)
-    }
-
-    fun setBoldAutoLinkModes(vararg modes: Mode) {
-        boldModes.addAll(modes)
-    }
-
-    fun setUnderLineAutoLinkModes(vararg modes: Mode) {
-        underLineModes.addAll(modes)
-    }
-
-    fun onAutoLinkClick(body: (Mode, String) -> Unit) {
-        onAutoLinkClick = body
-    }
-
-    override fun setTypeface(tf: Typeface?) {
-        super.setTypeface(tf)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

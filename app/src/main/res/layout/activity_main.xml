@@ -7,15 +7,12 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.luseen.activetextview.MainActivity">
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <com.luseen.autolinklibrary.AutoLinkTextView
-        android:id="@+id/active"
+        android:id="@+id/autoLinkTextView"
         android:textSize="15sp"
-        android:ellipsize="end"
-        android:singleLine="true"
         android:textColor="@android:color/black"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </RelativeLayout>
