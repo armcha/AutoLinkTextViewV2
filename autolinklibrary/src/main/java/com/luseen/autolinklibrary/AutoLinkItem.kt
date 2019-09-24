@@ -1,9 +1,10 @@
 package com.luseen.autolinklibrary
 
-internal class AutoLinkItem(val startPoint: Int,
-                                 val endPoint: Int,
-                                 val matchedText: String,
-                                 val mode: Mode){
+internal class AutoLinkItem(var startPoint: Int,
+                            var endPoint: Int,
+                            var originalText: String,
+                            var transformedText: String,
+                            val mode: Mode) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -15,6 +15,7 @@ internal abstract class TouchableSpan(private val normalTextColor: Int,
         with(textPaint) {
             isAntiAlias = true
             color = textColor
+            isUnderlineText = false
             bgColor = Color.TRANSPARENT
         }
     }

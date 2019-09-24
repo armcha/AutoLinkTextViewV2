@@ -12,7 +12,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import java.lang.reflect.Field
-import java.util.regex.Matcher
 
 class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView(context, attrs) {
 
@@ -23,9 +22,10 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     }
 
     private var onAutoLinkClick: ((Mode, String) -> Unit)? = null
-    private var modes: MutableList<Mode> = mutableListOf()
-    private var defaultSelectedColor = Color.LTGRAY
-    private var spanMap = mutableMapOf<Mode, List<CharacterStyle>>()
+    private val modes = mutableListOf<Mode>()
+    private val defaultSelectedColor = Color.LTGRAY
+    private val spanMap = mutableMapOf<Mode, List<CharacterStyle>>()
+    private val transformations = mutableMapOf<String, String>()
 
     var mentionModeColor = DEFAULT_COLOR
     var hashTagModeColor = DEFAULT_COLOR
@@ -33,6 +33,12 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     var phoneModeColor = DEFAULT_COLOR
     var emailModeColor = DEFAULT_COLOR
     var customModeColor = DEFAULT_COLOR
+
+    init {
+        transformations["https://google.com"] = "GOOGLE"
+        transformations["https://allo.google.com"] = "ARMAN"
+        transformations["https://www.youtube.com/watch?v=pwfKLfqoMeM"] = "YOUTUBE"
+    }
 
     override fun setHighlightColor(color: Int) {
         super.setHighlightColor(Color.TRANSPARENT)
@@ -62,12 +68,9 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
     private fun makeSpannableString(text: CharSequence): SpannableString {
 
-        val spannableString = SpannableString(text)
         val autoLinkItems = matchedRanges(text)
-
-        fun SpannableString.addSpan(span: Any, autoLinkItem: AutoLinkItem) {
-            setSpan(span, autoLinkItem.startPoint, autoLinkItem.endPoint, SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
+        val transformedText = transformLinks(text, autoLinkItems)
+        val spannableString = SpannableString(transformedText)
 
         for (autoLinkItem in autoLinkItems) {
             val mode = autoLinkItem.mode
@@ -75,20 +78,37 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
             val clickableSpan = object : TouchableSpan(currentColor, defaultSelectedColor) {
                 override fun onClick(widget: View) {
-                    onAutoLinkClick?.invoke(mode, autoLinkItem.matchedText)
+                    onAutoLinkClick?.invoke(mode, autoLinkItem.originalText)
                 }
             }
 
             spannableString.addSpan(clickableSpan, autoLinkItem)
 
-            val spans = spanMap[mode]
-            if (spans != null && spans.isNotEmpty()) {
-                spans.forEach {
-                    spannableString.addSpan(CharacterStyle.wrap(it), autoLinkItem)
-                }
+            spanMap[mode]?.forEach {
+                spannableString.addSpan(CharacterStyle.wrap(it), autoLinkItem)
             }
         }
         return spannableString
+    }
+
+    private fun transformLinks(text: CharSequence, autoLinkItems: Set<AutoLinkItem>): String {
+        var changedText = text.toString()
+        var shift = 0
+        autoLinkItems
+                .sortedBy { it.startPoint }
+                .forEach {
+                    if (it.mode is MODE_URL && it.originalText != it.transformedText) {
+                        val diff = it.originalText.length - it.transformedText.length
+                        shift += diff
+                        changedText = changedText.replace(it.originalText, it.transformedText)
+                        it.startPoint = it.startPoint - shift + diff
+                        it.endPoint = it.startPoint + it.transformedText.length
+                    } else {
+                        it.startPoint = it.startPoint - shift
+                        it.endPoint = it.startPoint + it.originalText.length
+                    }
+                }
+        return changedText
     }
 
     private fun matchedRanges(text: CharSequence): Set<AutoLinkItem> {
@@ -97,29 +117,37 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         }
 
         val autoLinkItems = mutableSetOf<AutoLinkItem>()
-
         modes.sortedBy { it.modeName }
                 .forEach {
                     val matcher = it.toPattern().matcher(text)
                     if (it is MODE_PHONE) {
-                        while (matcher.find())
-                            if (matcher.group().length > MIN_PHONE_NUMBER_LENGTH)
-                                addAutoLinkItem(matcher, autoLinkItems, it)
+                        while (matcher.find()) {
+                            val group = matcher.group()
+                            if (group.length > MIN_PHONE_NUMBER_LENGTH) {
+                                val item = AutoLinkItem(matcher.start(), matcher.end(),
+                                        matcher.group(), group, it)
+                                autoLinkItems.add(item)
+                            }
+                        }
                     } else {
                         while (matcher.find()) {
-                            addAutoLinkItem(matcher, autoLinkItems, it)
+                            val group = matcher.group()
+                            val matchedText = if (it is MODE_URL) {
+                                transformations[group] ?: group
+                            } else {
+                                group
+                            }
+                            val item = AutoLinkItem(matcher.start(), matcher.end(),
+                                    group, transformedText = matchedText, mode = it)
+                            autoLinkItems.add(item)
                         }
                     }
                 }
         return autoLinkItems
     }
 
-    private fun addAutoLinkItem(matcher: Matcher, autoLinkItems: MutableSet<AutoLinkItem>, mode: Mode) {
-        autoLinkItems.add(AutoLinkItem(
-                matcher.start(),
-                matcher.end(),
-                matcher.group(),
-                mode))
+    private fun SpannableString.addSpan(span: Any, autoLinkItem: AutoLinkItem) {
+        setSpan(span, autoLinkItem.startPoint, autoLinkItem.endPoint, SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 
     private fun getColorByMode(mode: Mode): Int {
