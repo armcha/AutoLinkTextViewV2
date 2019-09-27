@@ -3,6 +3,7 @@ package com.luseen.activetextview
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -19,26 +20,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val custom = MODE_CUSTOM("\\sAllo\\b")
-        autoLinkTextView.addAutoLinkMode(
-                MODE_HASHTAG,
-                MODE_PHONE,
-                MODE_URL,
-                MODE_EMAIL,
-                MODE_MENTION,
-                custom)
+        Handler().postDelayed({
+            val custom = MODE_CUSTOM("\\sAllo\\b")
+            autoLinkTextView.addAutoLinkMode(
+                    MODE_HASHTAG,
+                    MODE_URL,
+                    MODE_EMAIL,
+                    MODE_PHONE,
+                    custom,
+                    MODE_MENTION)
 
-        autoLinkTextView.addSpan(MODE_URL, StyleSpan(Typeface.BOLD_ITALIC), UnderlineSpan())
-//        autoLinkTextView.addSpan(MODE_PHONE, RelativeSizeSpan(1f))
-//        autoLinkTextView.addSpan(MODE_HASHTAG, BackgroundColorSpan(Color.BLUE), UnderlineSpan(), ForegroundColorSpan(Color.WHITE))
+            autoLinkTextView.addUrlTransformations(
+                    "https://google.com" to "GOOGLE",
+                    "https://allo.google.com" to "ALLO",
+                    "https://www.youtube.com/watch?v=pwfKLfqoMeM" to "WATCH THIS VIDEO")
 
-        autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color2)
-        autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
-        autoLinkTextView.customModeColor = ContextCompat.getColor(this, R.color.color1)
-        autoLinkTextView.mentionModeColor = ContextCompat.getColor(this, R.color.color5)
-        autoLinkTextView.emailModeColor = ContextCompat.getColor(this, R.color.colorPrimary)
+            autoLinkTextView.addSpan(MODE_URL, StyleSpan(Typeface.BOLD_ITALIC), UnderlineSpan())
+            autoLinkTextView.addSpan(MODE_HASHTAG, BackgroundColorSpan(Color.BLUE), UnderlineSpan(), ForegroundColorSpan(Color.WHITE))
 
-        autoLinkTextView.text = getString(R.string.long_text)
+            autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color2)
+            autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
+            autoLinkTextView.customModeColor = ContextCompat.getColor(this, R.color.color1)
+            autoLinkTextView.mentionModeColor = ContextCompat.getColor(this, R.color.color5)
+            autoLinkTextView.emailModeColor = ContextCompat.getColor(this, R.color.colorPrimary)
+
+            autoLinkTextView.text = getString(R.string.long_text)
+        }, 1)
 
         autoLinkTextView.onAutoLinkClick { mode, matchedText ->
             showDialog(mode.modeName, matchedText)
