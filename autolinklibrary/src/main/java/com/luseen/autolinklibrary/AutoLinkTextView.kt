@@ -23,11 +23,11 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         private const val DEFAULT_COLOR = Color.RED
     }
 
-    private val spanMap = mutableMapOf<Mode, List<CharacterStyle>>()
+    private val spanMap = mutableMapOf<Mode, HashSet<CharacterStyle>>()
     private var onAutoLinkClick: ((Mode, String) -> Unit)? = null
     private val transformations = mutableMapOf<String, String>()
     private val defaultSelectedColor = Color.LTGRAY
-    private val modes = mutableListOf<Mode>()
+    private val modes = mutableSetOf<Mode>()
 
     var mentionModeColor = DEFAULT_COLOR
     var hashTagModeColor = DEFAULT_COLOR
@@ -51,6 +51,8 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
             super.setText(spannableString, type)
         }
         Log.e("measureTimeMillis", "TIME $time")
+        Log.e("modes", "modes ${modes.size}")
+        Log.e("transformations", "transformations ${transformations.size}")
     }
 
     fun addAutoLinkMode(vararg modes: Mode) {
@@ -58,7 +60,8 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     }
 
     fun addSpan(mode: Mode, vararg spans: CharacterStyle) {
-        spanMap[mode] = spanMap[mode]?.plus(spans) ?: spans.toList()
+        spanMap[mode] = spans.toHashSet()
+        Log.e("spanMap", "spanMap ${spanMap[mode]?.size}")
     }
 
     fun onAutoLinkClick(body: (Mode, String) -> Unit) {
@@ -71,39 +74,59 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
     private fun makeSpannableString(text: CharSequence): SpannableString {
 
-        val autoLinkItems = matchedRanges(text)
-        val transformedText = transformLinks(text, autoLinkItems)
+        var autoLinkItems: Set<AutoLinkItem> = HashSet<AutoLinkItem>()
+        val autoLinkItemsTime = measureTimeMillis {
+            autoLinkItems = matchedRanges(text)
+        }
+        var transformedText = ""
+
+        val transformTIme = measureTimeMillis {
+            transformedText = transformLinks(text, autoLinkItems)
+        }
         val spannableString = SpannableString(transformedText)
 
-        for (autoLinkItem in autoLinkItems) {
-            val mode = autoLinkItem.mode
-            val currentColor = getColorByMode(mode)
+        Log.e("makeSpannableString", "autoLinkItems ${autoLinkItems.size}")
+        Log.e("span", "spanMap ${spanMap.size}")
+        Log.e("matchedRanges", "time ${autoLinkItemsTime}")
+        Log.e("transformLinks", "time ${transformTIme}")
 
-            val clickableSpan = object : TouchableSpan(currentColor, defaultSelectedColor) {
-                override fun onClick(widget: View) {
-                    onAutoLinkClick?.invoke(mode, autoLinkItem.originalText)
+        val addSpanTime = measureTimeMillis {
+            for (autoLinkItem in autoLinkItems) {
+                val mode = autoLinkItem.mode
+                val currentColor = getColorByMode(mode)
+
+                val clickableSpan = object : TouchableSpan(currentColor, defaultSelectedColor) {
+                    override fun onClick(widget: View) {
+                        onAutoLinkClick?.invoke(mode, autoLinkItem.originalText)
+                    }
                 }
-            }
 
-            spannableString.addSpan(clickableSpan, autoLinkItem)
+                spannableString.addSpan(clickableSpan, autoLinkItem)
 
-            spanMap[mode]?.forEach {
-                spannableString.addSpan(CharacterStyle.wrap(it), autoLinkItem)
+                val addSpanTimeForEach = measureTimeMillis {
+                    spanMap[mode]?.forEach {
+                        spannableString.addSpan(CharacterStyle.wrap(it), autoLinkItem)
+                    }
+                }
+                Log.e("addSpanTimeForEach", "time ${addSpanTimeForEach}")
             }
         }
+        Log.e("addSpanTime", "time ${addSpanTime}")
         return spannableString
     }
 
     private fun transformLinks(text: CharSequence, autoLinkItems: Set<AutoLinkItem>): String {
+        if (transformations.isEmpty())
+            return text.toString()
+
         val stringBuilder = StringBuilder(text)
         var shift = 0
 
         autoLinkItems
-                .asSequence()
                 .sortedBy { it.startPoint }
                 .forEach {
-                    val originalTextLength = it.originalText.length
                     if (it.mode is MODE_URL && it.originalText != it.transformedText) {
+                        val originalTextLength = it.originalText.length
                         val transformedTextLength = it.transformedText.length
                         val diff = originalTextLength - transformedTextLength
                         shift += diff
@@ -112,7 +135,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
                         stringBuilder.replace(it.startPoint, it.startPoint + originalTextLength, it.transformedText)
                     } else if (shift > 0) {
                         it.startPoint = it.startPoint - shift
-                        it.endPoint = it.startPoint + originalTextLength
+                        it.endPoint = it.startPoint + it.originalText.length
                     }
                 }
         return stringBuilder.toString()
@@ -124,8 +147,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         }
 
         val autoLinkItems = mutableSetOf<AutoLinkItem>()
-        modes.asSequence()
-                .sortedBy { it.modeName }
+        modes.sortedBy { it.modeName }
                 .forEach {
                     val matcher = it.toPattern().matcher(text)
                     while (matcher.find()) {
@@ -138,7 +160,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
                                 autoLinkItems.add(item)
                             }
                             else -> {
-                                val matchedText = if (it is MODE_URL) {
+                                val matchedText = if (it is MODE_URL && transformations.containsKey(group)) {
                                     transformations[group] ?: group
                                 } else {
                                     group

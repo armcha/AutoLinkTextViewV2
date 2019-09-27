@@ -3,7 +3,21 @@ package com.luseen.autolinklibrary
 import android.util.Log
 import java.util.regex.Pattern
 
-sealed class Mode(val modeName: String)
+sealed class Mode(val modeName: String) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Mode) return false
+
+        if (modeName != other.modeName) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return modeName.hashCode()
+    }
+}
 
 fun Mode.toPattern(): Pattern {
     return when (this) {
@@ -13,7 +27,7 @@ fun Mode.toPattern(): Pattern {
         is MODE_EMAIL -> EMAIL_PATTERN
         is MODE_URL -> URL_PATTERN
         is MODE_CUSTOM -> {
-            if (regex.isNotEmpty() && regex.length > 2) {
+            if (regex.length > 2) {
                 Pattern.compile(regex)
             } else {
                 Log.w(AutoLinkTextView.TAG, "Your custom regex is null, returning URL_PATTERN")
