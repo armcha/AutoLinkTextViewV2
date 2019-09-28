@@ -6,7 +6,7 @@
     android:background="@color/colorPrimary"
     android:layout_height="wrap_content">
 
-    <com.luseen.autolinklibrary.AutoLinkTextView
+    <io.github.armcha.autolink.AutoLinkTextView
         android:id="@+id/autoLinkTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

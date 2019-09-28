@@ -1,4 +1,4 @@
-package com.luseen.autolinklibrary
+package io.github.armcha.autolink
 
 internal class AutoLinkItem(var startPoint: Int,
                             var endPoint: Int,

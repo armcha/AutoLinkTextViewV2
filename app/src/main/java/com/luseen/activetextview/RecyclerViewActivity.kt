@@ -1,4 +1,4 @@
-package com.luseen.activetextview
+package io.github.armcha
 
 import android.graphics.Typeface
 import android.os.Bundle
@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.luseen.autolinklibrary.*
+import io.github.armcha.autolink.*
 import kotlinx.android.synthetic.main.activity_recycler_view.*
 
 

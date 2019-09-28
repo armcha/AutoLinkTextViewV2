@@ -1,4 +1,4 @@
-package com.luseen.autolinklibrary
+package io.github.armcha.autolink
 
 import android.util.Patterns
 import java.util.regex.Pattern

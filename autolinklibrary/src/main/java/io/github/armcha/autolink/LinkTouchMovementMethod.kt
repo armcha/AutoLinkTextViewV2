@@ -1,4 +1,4 @@
-package com.luseen.autolinklibrary
+package io.github.armcha.autolink
 
 import android.text.Selection
 import android.text.Spannable

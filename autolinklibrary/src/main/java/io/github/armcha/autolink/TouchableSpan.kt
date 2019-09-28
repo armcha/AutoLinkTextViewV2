@@ -1,4 +1,4 @@
-package com.luseen.autolinklibrary
+package io.github.armcha.autolink
 
 import android.graphics.Color
 import android.text.TextPaint

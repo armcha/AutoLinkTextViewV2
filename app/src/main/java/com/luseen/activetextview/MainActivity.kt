@@ -1,4 +1,4 @@
-package com.luseen.activetextview
+package io.github.armcha
 
 import android.graphics.Color
 import android.graphics.Typeface
@@ -10,7 +10,7 @@ import android.text.style.UnderlineSpan
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.luseen.autolinklibrary.*
+import io.github.armcha.autolink.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
