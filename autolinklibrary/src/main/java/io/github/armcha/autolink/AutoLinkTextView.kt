@@ -24,7 +24,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     }
 
     private val spanMap = mutableMapOf<Mode, HashSet<CharacterStyle>>()
-    private var onAutoLinkClick: ((Mode, String) -> Unit)? = null
+    private var onAutoLinkClick: ((AutoLinkItem) -> Unit)? = null
     private val transformations = mutableMapOf<String, String>()
     private val defaultSelectedColor = Color.LTGRAY
     private val modes = mutableSetOf<Mode>()
@@ -64,7 +64,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         Log.e("spanMap", "spanMap ${spanMap[mode]?.size}")
     }
 
-    fun onAutoLinkClick(body: (Mode, String) -> Unit) {
+    fun onAutoLinkClick(body: (AutoLinkItem) -> Unit) {
         onAutoLinkClick = body
     }
 
@@ -97,7 +97,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
                 val clickableSpan = object : TouchableSpan(currentColor, defaultSelectedColor) {
                     override fun onClick(widget: View) {
-                        onAutoLinkClick?.invoke(mode, autoLinkItem.originalText)
+                        onAutoLinkClick?.invoke(autoLinkItem)
                     }
                 }
 

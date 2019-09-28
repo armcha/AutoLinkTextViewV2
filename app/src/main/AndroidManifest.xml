@@ -8,21 +8,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.luseen.activetextview.StaticTextActivity"></activity>
-        <activity android:name=".RecyclerViewActivity">
+        <activity android:name="io.github.armcha.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".RecyclerViewActivity" />
+        <activity android:name=".StaticTextActivity" />
     </application>
 
 </manifest>

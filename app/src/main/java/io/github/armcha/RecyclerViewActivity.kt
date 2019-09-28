@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -54,10 +53,12 @@ class RecyclerViewActivity : AppCompatActivity() {
                 autoLinkTextView.mentionModeColor = ContextCompat.getColor(context, R.color.color5)
                 autoLinkTextView.emailModeColor = ContextCompat.getColor(context, R.color.colorPrimary)
 
-                autoLinkTextView.text = getString(R.string.long_text)
+                autoLinkTextView.text = getString(R.string.android_text)
 
-                autoLinkTextView.onAutoLinkClick { mode, matchedText ->
-                    Toast.makeText(holder.itemView.context, matchedText, Toast.LENGTH_SHORT).show()
+                autoLinkTextView.onAutoLinkClick {
+                    val message = if (it.originalText == it.transformedText) it.originalText
+                    else "Original text - ${it.originalText} \n\nTransformed text - ${it.transformedText}"
+                    showDialog(it.mode.modeName, message)
                 }
             }
         }

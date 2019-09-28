@@ -1,6 +1,6 @@
 package io.github.armcha.autolink
 
-internal class AutoLinkItem(var startPoint: Int,
+class AutoLinkItem(var startPoint: Int,
                             var endPoint: Int,
                             var originalText: String,
                             var transformedText: String,

@@ -7,18 +7,18 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import io.github.armcha.autolink.*
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_static_text.*
 
-class MainActivity : AppCompatActivity() {
+class StaticTextActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val custom = MODE_CUSTOM("\\sAllo\\b")
+        setContentView(R.layout.activity_static_text)
+
+        val custom = MODE_CUSTOM("\\sAndroid\\b")
         autoLinkTextView.addAutoLinkMode(
                 MODE_HASHTAG,
                 MODE_URL,
@@ -28,9 +28,9 @@ class MainActivity : AppCompatActivity() {
                 MODE_MENTION)
 
         autoLinkTextView.addUrlTransformations(
-                "https://google.com" to "GOOGLE",
-                "https://allo.google.com" to "ALLO",
-                "https://www.youtube.com/watch?v=pwfKLfqoMeM" to "WATCH THIS VIDEO")
+                "https://google.com" to "Google",
+                "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS",
+                "https://en.wikipedia.org/wiki/Fire_OS" to "FIRE")
 
         autoLinkTextView.addSpan(MODE_URL, StyleSpan(Typeface.BOLD_ITALIC), UnderlineSpan())
         autoLinkTextView.addSpan(MODE_HASHTAG, BackgroundColorSpan(Color.BLUE), UnderlineSpan(), ForegroundColorSpan(Color.WHITE))
@@ -41,20 +41,12 @@ class MainActivity : AppCompatActivity() {
         autoLinkTextView.mentionModeColor = ContextCompat.getColor(this, R.color.color5)
         autoLinkTextView.emailModeColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
-        autoLinkTextView.text = getString(R.string.long_text)
+        autoLinkTextView.text = getString(R.string.android_text)
 
-        autoLinkTextView.onAutoLinkClick { mode, matchedText ->
-            showDialog(mode.modeName, matchedText)
+        autoLinkTextView.onAutoLinkClick {
+            val message = if (it.originalText == it.transformedText) it.originalText
+            else "Original text - ${it.originalText} \n\nTransformed text - ${it.transformedText}"
+            showDialog(it.mode.modeName, message)
         }
-    }
-
-    private fun showDialog(title: String, message: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage(message)
-                .setTitle(title)
-                .setCancelable(false)
-                .setPositiveButton("OK") { dialog, id -> dialog.dismiss() }
-        val alert = builder.create()
-        alert.show()
     }
 }
