@@ -1,35 +1,41 @@
-# AutoLinkTextView
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AutoLinkTextView-green.svg?style=true)](https://android-arsenal.com/details/1/4419)
+# AutoLinkTextView V2
 
-AutoLinkTextView is TextView that supports Hashtags (#), Mentions (@) , URLs (http://),
-Phone and Email automatically detecting and ability to handle clicks.
+AutoLinkTextViewV2 is the new version of the AutoLinkTextView.
+**The main differences between the old and new version are**
+- Fully migration to Kotlin
+- Added several new features
+- Some imporvements and fixes 
+
+It supports automatic detection and click handlig for Hashtags (#), Mentions (@) , URLs (http://),
+Phone Numbers and Emails
 
 ![](screens/gif1.gif)
 
-The current minSDK version is API level 14 Android 4.0 (ICE CREAM SANDWICH).
+The current minSDK version is API level 16 Android TODO
 
-## Download sample [apk][77]
+### Download sample [apk][77]
 [77]: https://github.com/armcha/AutoLinkTextView/raw/master/screens/AutoLinkTextView.apk
 
-## Features
+### Features
 
 * Default support for **Hashtag, Mention, Link, Phone number and Email**
 * Support for **custom types** via regex
-* Ability to set text color
+* Transform url to short clickable text
+* Ability to apply **multiple spans** to any mode
+* Ability to set specific text color
 * Ability to set pressed state color
-* Ability to make specific modes **bold**
 
 ![](screens/screen1.png)
 -----------------------
 
-## Download
+### Download
 
 Gradle:
 ```groovy
 compile 'com.github.armcha:AutoLinkTextView:0.3.0'
 ```
 
-## Setup and usage
+### Setup and Usage
 
 Add AutoLinkTextView to your layout
 ```xml
@@ -43,11 +49,15 @@ Add AutoLinkTextView to your layout
 AutoLinkTextView autoLinkTextView = (AutoLinkTextView) findViewById(R.id.active);
 ```
 
-Set up mode or modes
+Add one or multiple modes
 ```java
 autoLinkTextView.addAutoLinkMode(
                 AutoLinkMode.MODE_PHONE);
 ```
+
+Add url transformations for tansforming them to short clickable text
+
+Add one or multiple spans to specific mode
 
 Set text to AutoLinkTextView
 ```java
@@ -67,7 +77,7 @@ autoLinkTextView.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
 Customizing
 ---------
 
-AutoLinkModes
+All possible modes
 
 -------------------------
 #### AutoLinkMode.MODE_PHONE
@@ -94,14 +104,14 @@ AutoLinkModes
 
 ![](screens/screen7.png)
 
-if you use custom mode, you should also add custom regex,
+For use of custom mode add custom regex
 
 ```java
-autoLinkTextView.setCustomRegex("\\sAllo\\b");
+autoLinkTextView.setCustomRegex("\\sAndroid\\b");
 ```
 Note:Otherwise ```MODE_CUSTOM``` will return ```MODE_URL```
 -------------------------
-You can also use multiple types
+You can also use multiple modes
 ```java
 autoLinkTextView.addAutoLinkMode(
                 AutoLinkMode.MODE_HASHTAG,
@@ -112,7 +122,18 @@ autoLinkTextView.addAutoLinkMode(
 ```
 ![](screens/screen1.png)
 -------------------------
-You can also change text color for autoLink mode
+You can transform specific url to short text
+```java
+autoLinkTextView.addAutoLinkMode(
+                AutoLinkMode.MODE_HASHTAG,
+                AutoLinkMode.MODE_PHONE,
+                AutoLinkMode.MODE_URL,
+                AutoLinkMode.MODE_MENTION,
+                AutoLinkMode.MODE_CUSTOM);
+```
+![](screens/screen1.png)
+-------------------------
+You can change text color for the specific mode
 ```java
 autoLinkTextView.setHashtagModeColor(ContextCompat.getColor(this, R.color.yourColor));
 autoLinkTextView.setPhoneModeColor(ContextCompat.getColor(this, R.color.yourColor));
@@ -122,32 +143,21 @@ autoLinkTextView.setMentionModeColor(ContextCompat.getColor(this, R.color.yourCo
 autoLinkTextView.setEmailModeColor(ContextCompat.getColor(this, R.color.yourColor));
 ```
 -------------------------
+You can add multiple spans to any mode
+```java
+autoLinkTextView.addAutoLinkMode(
+                AutoLinkMode.MODE_HASHTAG,
+                AutoLinkMode.MODE_PHONE,
+                AutoLinkMode.MODE_URL,
+                AutoLinkMode.MODE_MENTION,
+                AutoLinkMode.MODE_CUSTOM);
+```
+![](screens/screen1.png)
+-------------------------
 And also autoLink text pressed state color
 ```java
 autoLinkTextView.setSelectedStateColor(ContextCompat.getColor(this, R.color.yourColor));
 ```
--------------------------
-
-Set modes that should be bold
-
-```java
-autoLinkTextView.setBoldAutoLinkModes(
-  AutoLinkMode.MODE_HASHTAG,
-  AutoLinkMode.MODE_PHONE,
-  AutoLinkMode.MODE_URL,
-  AutoLinkMode.MODE_EMAIL,
-  AutoLinkMode.MODE_MENTION
-);
-```
-
--------------------------
-#### Enable under line
-
-```java
-autoLinkTextView.enableUnderLine();
-```
-
-![](screens/screen8.png)
 -------------------------
 
 ### Contact :book:
@@ -162,11 +172,13 @@ autoLinkTextView.enableUnderLine();
 
 :arrow_forward:  **Website**: https://armcha.github.io/
 
+
 License
 --------
 
-      ElasticView
-      Copyright (c) 2018 Arman Chatikyan (https://github.com/armcha/ElasticView).
+
+      Auto Link TextView V2 library for Android
+      Copyright (c) 2019 Arman Chatikyan (https://github.com/armcha/AutoLinkTextViewV2).
 
       Licensed under the Apache License, Version 2.0 (the "License");
       you may not use this file except in compliance with the License.
@@ -179,27 +191,3 @@ License
       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
       See the License for the specific language governing permissions and
       limitations under the License.
-
-
-License
---------
-
-
-      Auto Link TextView library for Android
-      Copyright (c) 2018 Arman Chatikyan (https://github.com/armcha/AutoLinkTextView).
-
-      Licensed under the Apache License, Version 2.0 (the "License");
-      you may not use this file except in compliance with the License.
-      You may obtain a copy of the License at
-
-         http://www.apache.org/licenses/LICENSE-2.0
-
-      Unless required by applicable law or agreed to in writing, software
-      distributed under the License is distributed on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-      See the License for the specific language governing permissions and
-      limitations under the License.
-
-
-
-
