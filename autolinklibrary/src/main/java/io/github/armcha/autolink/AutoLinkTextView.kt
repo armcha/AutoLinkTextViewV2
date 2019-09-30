@@ -51,8 +51,6 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
             super.setText(spannableString, type)
         }
         Log.e("measureTimeMillis", "TIME $time")
-        Log.e("modes", "modes ${modes.size}")
-        Log.e("transformations", "transformations ${transformations.size}")
     }
 
     fun addAutoLinkMode(vararg modes: Mode) {
@@ -61,7 +59,6 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
     fun addSpan(mode: Mode, vararg spans: CharacterStyle) {
         spanMap[mode] = spans.toHashSet()
-        Log.e("spanMap", "spanMap ${spanMap[mode]?.size}")
     }
 
     fun onAutoLinkClick(body: (AutoLinkItem) -> Unit) {
@@ -74,44 +71,30 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
     private fun makeSpannableString(text: CharSequence): SpannableString {
 
-        var autoLinkItems: Set<AutoLinkItem> = HashSet<AutoLinkItem>()
+        var autoLinkItems: Set<AutoLinkItem> = HashSet()
         val autoLinkItemsTime = measureTimeMillis {
             autoLinkItems = matchedRanges(text)
         }
-        var transformedText = ""
+        Log.e("matchedRanges", "time $autoLinkItemsTime")
 
-        val transformTIme = measureTimeMillis {
-            transformedText = transformLinks(text, autoLinkItems)
-        }
+        val transformedText = transformLinks(text, autoLinkItems)
         val spannableString = SpannableString(transformedText)
 
-        Log.e("makeSpannableString", "autoLinkItems ${autoLinkItems.size}")
-        Log.e("span", "spanMap ${spanMap.size}")
-        Log.e("matchedRanges", "time ${autoLinkItemsTime}")
-        Log.e("transformLinks", "time ${transformTIme}")
+        for (autoLinkItem in autoLinkItems) {
+            val mode = autoLinkItem.mode
+            val currentColor = getColorByMode(mode)
 
-        val addSpanTime = measureTimeMillis {
-            for (autoLinkItem in autoLinkItems) {
-                val mode = autoLinkItem.mode
-                val currentColor = getColorByMode(mode)
-
-                val clickableSpan = object : TouchableSpan(currentColor, defaultSelectedColor) {
-                    override fun onClick(widget: View) {
-                        onAutoLinkClick?.invoke(autoLinkItem)
-                    }
+            val clickableSpan = object : TouchableSpan(currentColor, defaultSelectedColor) {
+                override fun onClick(widget: View) {
+                    onAutoLinkClick?.invoke(autoLinkItem)
                 }
+            }
 
-                spannableString.addSpan(clickableSpan, autoLinkItem)
-
-                val addSpanTimeForEach = measureTimeMillis {
-                    spanMap[mode]?.forEach {
-                        spannableString.addSpan(CharacterStyle.wrap(it), autoLinkItem)
-                    }
-                }
-                Log.e("addSpanTimeForEach", "time ${addSpanTimeForEach}")
+            spannableString.addSpan(clickableSpan, autoLinkItem)
+            spanMap[mode]?.forEach {
+                spannableString.addSpan(CharacterStyle.wrap(it), autoLinkItem)
             }
         }
-        Log.e("addSpanTime", "time ${addSpanTime}")
         return spannableString
     }
 

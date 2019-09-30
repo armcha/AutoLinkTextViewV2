@@ -1,34 +1,35 @@
 <resources>
     <string name="app_name">AutoLinkTextView</string>
-    <string name="long_text">Whether it’s planning a night out or just catching up,
-        we all rely on #messaging to stay in @touch with friends and loved ones.
-        But too often we have to hit pause on our #conversations —
-        whether it’s to check the status of a flight or look up that new restaurant
-        and dummy number for test 801-691-7894.
-        So we created a messaging app that helps you keep your @conversation going,
-        by providing assistance when you need it, --- https://google.com --- .
-        Today, we’re releasing Allo and dummy number for test (808) 533-0075,
-        and email for testing armcha01@gmail.com, a new smart messaging app for Android and iOS that
-        helps you say more and do more right in your chats. Allo can help --- https://www.youtube.com/watch?v=pwfKLfqoMeM --- you make plans,
-        find @information, and express yourself more --- https://allo.google.com --- easily in chat. And the more you use it,
-        the more it improves over time. Allo makes it easier for you to #respond quickly
-        and keep the #conversation going, even when you’re on the go.
-        668797
-        Chat is more than just --- https://google.com --- text and dummy number for test +37493023017,
-        so we’ve created a rich canvas for you to express yourself in Google Allo.
-        Our web site.</string>
     <string name="android_text">Android is a mobile operating system developed by https://google.com.
             It is based on a modified version of the @Linux kernel and other open source software,
-            and is designed primarily for touchscreen mobile #devices such as smartphones and #tablets.
-            \n\n In addition, https://google.com has developed Android TV for televisions, Android Auto for cars
+            and is designed @primarily for touchscreen mobile devices such as smartphones and #tablets.
+            In addition, https://github.com/armcha/AutoLinkTextViewV2 has developed Android TV for televisions, Android Auto for cars
             and https://en.wikipedia.org/wiki/Wear_OS for wearables, each with a specialized user #interface.
             Variants of Android are also used on game consoles, digital cameras, PCs and other #electronics.
             Android is also associated with a suite of proprietary software developed by Google,
-            called Google Mobile Services (GMS),that frequently comes pre-installed on devices.
+            called Google Mobile Services (GMS) https://www.android.com/gms, that frequently comes pre-installed on devices.
             This includes core apps such as Gmail chatikyana@gmail.com ,
             the application store/digital +37493023017 distribution platform Google @Play and associated Google Play Services development platform,
             and usually includes the Google #Chrome web browser and Google @Search app.
             These apps are licensed by manufacturers of Android devices certified under standards imposed by Google,
+            but AOSP has been used as the basis of competing Android ecosystems such as Amazons https://en.wikipedia.org/wiki/Fire_OS OS,
+            which use 801-691-7894 their own equivalents to Google Mobile Services.
+    </string>
+
+    <string name="android_text_short">Android is a mobile operating system developed by https://google.com.
+            It is based on a modified version of the @Linux kernel and other open source software,
+            and is designed @primarily for touchscreen mobile devices such as smartphones and #tablets.
+            \n\n In addition, https://google.com has developed Android TV for televisions, Android Auto for cars
+            and https://en.wikipedia.org/wiki/Wear_OS for wearables, each with a specialized user #interface.
+            Variants of Android are also used on game consoles, digital cameras, PCs and other #electronics.
+            Android is also associated with a suite of proprietary software developed by Google,
+            called Google @Mobile Services (GMS),that frequently comes pre-installed on devices.
+            This includes core apps such as Gmail chatikyana@gmail.com.
+    </string>
+    <string name="android_text_short_second">The application store/digital +37493023017 distribution
+            platform Google @Play and associated Google Play Services development platform,
+            and usually includes the Google #Chrome web browser and Google @Search app.
+            These apps are licensed by manufacturers of Android devices certified under standards sample@android.com imposed by Google,
             but AOSP has been used as the basis of competing Android ecosystems such as Amazons https://en.wikipedia.org/wiki/Fire_OS OS,
             which use 801-691-7894 their own equivalents to Google Mobile Services.
     </string>

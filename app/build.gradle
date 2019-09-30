@@ -35,6 +35,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:+'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 }
 repositories {
     mavenCentral()

@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@android:color/white"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <io.github.armcha.autolink.AutoLinkTextView
+        android:id="@+id/autoLinkTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
-
-        <io.github.armcha.autolink.AutoLinkTextView
-            android:id="@+id/autoLinkTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="17sp" />
-
-    </ScrollView>
-</FrameLayout>
+        android:padding="15dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+</ScrollView>
