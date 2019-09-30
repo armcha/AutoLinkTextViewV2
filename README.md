@@ -4,7 +4,8 @@
 AutoLinkTextView is TextView that supports Hashtags (#), Mentions (@) , URLs (http://),
 Phone and Email automatically detecting and ability to handle clicks.
 
-![](screens/gif1.gif)
+![](screens/static_gif.gif)
+![](screens/recycler_gif.gif)
 
 The current minSDK version is API level 14 Android 4.0 (ICE CREAM SANDWICH).
 

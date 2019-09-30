@@ -57,7 +57,7 @@ class RecyclerViewActivity : AppCompatActivity() {
                 autoLinkTextView.customModeColor = ContextCompat.getColor(context, R.color.color1)
                 autoLinkTextView.mentionModeColor = ContextCompat.getColor(context, R.color.color3)
                 autoLinkTextView.emailModeColor = ContextCompat.getColor(context, R.color.colorPrimary)
-                autoLinkTextView.phoneModeColor = ContextCompat.getColor(context, R.color.colorPrimary)
+                autoLinkTextView.phoneModeColor = ContextCompat.getColor(context, R.color.colorAccent)
 
                 val text = if (position % 2 == 0) R.string.android_text_short else R.string.android_text_short_second
                 autoLinkTextView.text = getString(text)
