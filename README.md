@@ -68,7 +68,7 @@ autoLinkTextView.addUrlTransformations(
                 "https://google.com" to "Google",
                 "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS")
 ```
-.<img src="screens/transformation_before.png" width="400">|<img src="screens/transformation_after.png" width="400">
+<img src="screens/transformation_before.png" width="400"> <img src="screens/transformation_after.png" width="400">
 
 Add one or multiple spans to specific mode
 ```kotlin
@@ -96,32 +96,32 @@ All possible modes
 -------------------------
 #### MODE_PHONE
 
-<img src="screens/phone.png" width="500">
+<img src="screens/phone.png" width="400">
 -------------------------
 
 #### MODE_HASHTAG
 
-<img src="screens/hashtag.png" width="500">
+<img src="screens/hashtag.png" width="400">
 -------------------------
 
 #### MODE_URL
 
-<img src="screens/url.png" width="500">
+<img src="screens/url.png" width="400">
 -------------------------
 
 #### MODE_MENTION
 
-<img src="screens/mention.png" width="500">
+<img src="screens/mention.png" width="400">
 -------------------------
 
 #### MODE_EMAIL
 
-<img src="screens/gmail.png" width="500">
+<img src="screens/gmail.png" width="400">
 -------------------------
 
 #### MODE_CUSTOM
 
-<img src="screens/custom.png" width="500">
+<img src="screens/custom.png" width="400">
 
 For use of custom mode add custom regex
 
