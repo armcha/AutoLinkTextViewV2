@@ -7,11 +7,16 @@ AutoLinkTextViewV2 is the new version of the AutoLinkTextView.
 - Added several new features
 - Some imporvements and fixes 
 
-It supports automatic detection and click handlig for Hashtags (#), Mentions (@) , URLs (http://),
-Phone Numbers and Emails
+It supports automatic detection and click handlig for 
+* Hashtags (#)
+* Mentions (@) 
+* URLs (http://)
+* Phone Numbers
+* Emails
+* Custom Regex
 
-![](screens/static_gif.gif)
-![](screens/recycler_gif.gif)
+[]<img src="screens/static.png" width="300">
+<img src="screens/static_gif.gif" width="300">
 
 The current minSDK version is API level 16 Android TODO
 
@@ -27,8 +32,6 @@ The current minSDK version is API level 16 Android TODO
 * Ability to set specific text color
 * Ability to set pressed state color
 
-![](screens/static.png|width=500)
-![](screens/recycler.png|width=100)
 -----------------------
 
 ### Download
@@ -92,27 +95,27 @@ All possible modes
 -------------------------
 #### MODE_PHONE
 
-![](screens/phone.png)
+<img src="screens/phone.png" width="500">
 -------------------------
 #### MODE_HASHTAG
 
-![](screens/hashtag.png)
+<img src="screens/hashtag.png" width="500">
 -------------------------
 #### MODE_URL
 
-![](screens/url.png)
+<img src="screens/url.png" width="500">
 -------------------------
 #### MODE_MENTION
 
-![](screens/mention.png)
+<img src="screens/mention.png" width="500">
 -------------------------
 #### MODE_EMAIL
 
-![](screens/gmail.png)
+<img src="screens/gmail.png" width="500">
 -------------------------
 #### MODE_CUSTOM
 
-![](screens/custom.png)
+<img src="screens/custom.png" width="500">
 
 For use of custom mode add custom regex
 
@@ -152,8 +155,6 @@ autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
 :arrow_forward:  **Medium**: https://medium.com/@chatikyan
 
 :arrow_forward:  **Twitter**: https://twitter.com/ArmanChatikyan
-
-:arrow_forward:  **Google+**: https://plus.google.com/+ArmanChatikyan
 
 :arrow_forward:  **Website**: https://armcha.github.io/
 
