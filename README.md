@@ -1,6 +1,7 @@
 # AutoLinkTextView V2
 
 AutoLinkTextViewV2 is the new version of the AutoLinkTextView.
+
 **The main differences between the old and new version are**
 - Fully migration to Kotlin
 - Added several new features
@@ -15,7 +16,7 @@ Phone Numbers and Emails
 The current minSDK version is API level 16 Android TODO
 
 ### Download sample [apk][77]
-[77]: https://github.com/armcha/AutoLinkTextView/raw/master/screens/AutoLinkTextView.apk
+[77]: https://github.com/armcha/AutoLinkTextViewV2/blob/master/screens/AutoLinkTextView.apk
 
 ### Features
 
@@ -26,7 +27,8 @@ The current minSDK version is API level 16 Android TODO
 * Ability to set specific text color
 * Ability to set pressed state color
 
-![](screens/screen1.png)
+![](screens/static.png|width=500)
+![](screens/recycler.png|width=100)
 -----------------------
 
 ### Download
@@ -40,39 +42,46 @@ compile 'com.github.armcha:AutoLinkTextView:0.3.0'
 
 Add AutoLinkTextView to your layout
 ```xml
-    <com.luseen.autolinklibrary.AutoLinkTextView
-         android:id="@+id/active"
+     <io.github.armcha.autolink.AutoLinkTextView
+         android:id="@+id/autolinkTextView"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content" />
 ```
 
-```java
-AutoLinkTextView autoLinkTextView = (AutoLinkTextView) findViewById(R.id.active);
+```kotlin
+val autoLinkTextView = findViewById<AutoLinkTextView>(R.id.autolinkTextView);
 ```
 
 Add one or multiple modes
-```java
+```kotlin
 autoLinkTextView.addAutoLinkMode(
-                AutoLinkMode.MODE_PHONE);
+                MODE_HASHTAG,
+                MODE_URL)
 ```
 
 Add url transformations for tansforming them to short clickable text
+```kotlin
+autoLinkTextView.addUrlTransformations(
+                "https://google.com" to "Google",
+                "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS")
+```
 
 Add one or multiple spans to specific mode
+```kotlin
+autoLinkTextView.addSpan(MODE_URL, StyleSpan(Typeface.ITALIC), UnderlineSpan())
+autoLinkTextView.addSpan(MODE_HASHTAG, UnderlineSpan(), TypefaceSpan("monospace"))
+```
 
 Set text to AutoLinkTextView
-```java
-autoLinkTextView.setAutoLinkText(getString(R.string.long_text));
+```kotlin
+autoLinkTextView.text = getString(R.string.android_text)
 ```
 
 Set AutoLinkTextView click listener
-```java
-autoLinkTextView.setAutoLinkOnClickListener(new AutoLinkOnClickListener() {
-            @Override
-            public void onAutoLinkTextClick(AutoLinkMode mode, String matchedText) {
+```kotlin
+autoLinkTextView.onAutoLinkClick { item: AutoLinkItem ->
 
-            }
-        });
+}
 ```
 
 Customizing
@@ -81,85 +90,60 @@ Customizing
 All possible modes
 
 -------------------------
-#### AutoLinkMode.MODE_PHONE
+#### MODE_PHONE
 
-![](screens/screen2.png)
+![](screens/phone.png)
 -------------------------
-#### AutoLinkMode.MODE_HASHTAG
+#### MODE_HASHTAG
 
-![](screens/screen3.png)
+![](screens/hashtag.png)
 -------------------------
-#### AutoLinkMode.MODE_URL
+#### MODE_URL
 
-![](screens/screen4.png)
+![](screens/url.png)
 -------------------------
-#### AutoLinkMode.MODE_MENTION
+#### MODE_MENTION
 
-![](screens/screen5.png)
+![](screens/mention.png)
 -------------------------
-#### AutoLinkMode.MODE_EMAIL
+#### MODE_EMAIL
 
-![](screens/screen6.png)
+![](screens/gmail.png)
 -------------------------
-#### AutoLinkMode.MODE_CUSTOM
+#### MODE_CUSTOM
 
-![](screens/screen7.png)
+![](screens/custom.png)
 
 For use of custom mode add custom regex
 
-```java
-autoLinkTextView.setCustomRegex("\\sAndroid\\b");
+```kotlin
+val custom = MODE_CUSTOM("\\sAndroid\\b")
 ```
-Note:Otherwise ```MODE_CUSTOM``` will return ```MODE_URL```
 -------------------------
 You can also use multiple modes
-```java
+```kotlin
 autoLinkTextView.addAutoLinkMode(
-                AutoLinkMode.MODE_HASHTAG,
-                AutoLinkMode.MODE_PHONE,
-                AutoLinkMode.MODE_URL,
-                AutoLinkMode.MODE_MENTION,
-                AutoLinkMode.MODE_CUSTOM);
+                MODE_HASHTAG,
+                MODE_URL,
+                MODE_EMAIL,
+                MODE_PHONE)
 ```
-![](screens/screen1.png)
 -------------------------
 You can transform specific url to short text
-```java
-autoLinkTextView.addAutoLinkMode(
-                AutoLinkMode.MODE_HASHTAG,
-                AutoLinkMode.MODE_PHONE,
-                AutoLinkMode.MODE_URL,
-                AutoLinkMode.MODE_MENTION,
-                AutoLinkMode.MODE_CUSTOM);
+```kotlin
+autoLinkTextView.addUrlTransformations(
+                "https://google.com" to "Google",
+                "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS",
+                "https://github.com/armcha/AutoLinkTextViewV2" to "Github",
+                "https://en.wikipedia.org/wiki/Fire_OS" to "FIRE")
 ```
-![](screens/screen1.png)
+![](screens/static.png)
 -------------------------
 You can change text color for the specific mode
-```java
-autoLinkTextView.setHashtagModeColor(ContextCompat.getColor(this, R.color.yourColor));
-autoLinkTextView.setPhoneModeColor(ContextCompat.getColor(this, R.color.yourColor));
-autoLinkTextView.setCustomModeColor(ContextCompat.getColor(this, R.color.yourColor));
-autoLinkTextView.setUrlModeColor(ContextCompat.getColor(this, R.color.yourColor));
-autoLinkTextView.setMentionModeColor(ContextCompat.getColor(this, R.color.yourColor));
-autoLinkTextView.setEmailModeColor(ContextCompat.getColor(this, R.color.yourColor));
+```kotlin
+autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color2)
+autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
 ```
--------------------------
-You can add multiple spans to any mode
-```java
-autoLinkTextView.addAutoLinkMode(
-                AutoLinkMode.MODE_HASHTAG,
-                AutoLinkMode.MODE_PHONE,
-                AutoLinkMode.MODE_URL,
-                AutoLinkMode.MODE_MENTION,
-                AutoLinkMode.MODE_CUSTOM);
-```
-![](screens/screen1.png)
--------------------------
-And also autoLink text pressed state color
-```java
-autoLinkTextView.setSelectedStateColor(ContextCompat.getColor(this, R.color.yourColor));
-```
--------------------------
 
 ### Contact :book:
 
