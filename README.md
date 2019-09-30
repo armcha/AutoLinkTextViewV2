@@ -7,7 +7,7 @@ AutoLinkTextViewV2 is the new version of the AutoLinkTextView.
 - Added several new features
 - Some imporvements and fixes 
 
-**It supports automatic detection and click handlig for **
+**It supports automatic detection and click handlig for**
 * Hashtags (#)
 * Mentions (@) 
 * URLs (http://)
@@ -68,8 +68,7 @@ autoLinkTextView.addUrlTransformations(
                 "https://google.com" to "Google",
                 "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS")
 ```
-.<img src="screens/transformation_before.png" width="500">
-<img src="screens/transformation_after.png" width="500">
+.<img src="screens/transformation_before.png" width="400">|<img src="screens/transformation_after.png" width="400">
 
 Add one or multiple spans to specific mode
 ```kotlin
