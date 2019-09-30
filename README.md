@@ -7,7 +7,7 @@ AutoLinkTextViewV2 is the new version of the AutoLinkTextView.
 - Added several new features
 - Some imporvements and fixes 
 
-It supports automatic detection and click handlig for 
+**It supports automatic detection and click handlig for **
 * Hashtags (#)
 * Mentions (@) 
 * URLs (http://)
@@ -15,10 +15,10 @@ It supports automatic detection and click handlig for
 * Emails
 * Custom Regex
 
-[]<img src="screens/static.png" width="300">
+.<img src="screens/static.png" width="300">
 <img src="screens/static_gif.gif" width="300">
 
-The current minSDK version is API level 16 Android TODO
+The current minSDK version is API level 16.
 
 ### Download sample [apk][77]
 [77]: https://github.com/armcha/AutoLinkTextViewV2/blob/master/screens/AutoLinkTextView.apk
@@ -45,10 +45,10 @@ compile 'com.github.armcha:AutoLinkTextView:0.3.0'
 
 Add AutoLinkTextView to your layout
 ```xml
-     <io.github.armcha.autolink.AutoLinkTextView
-         android:id="@+id/autolinkTextView"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content" />
+<io.github.armcha.autolink.AutoLinkTextView
+    android:id="@+id/autolinkTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
 ```
 
 ```kotlin
@@ -68,6 +68,8 @@ autoLinkTextView.addUrlTransformations(
                 "https://google.com" to "Google",
                 "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS")
 ```
+.<img src="screens/transformation_before.png" width="500">
+<img src="screens/transformation_after.png" width="500">
 
 Add one or multiple spans to specific mode
 ```kotlin
@@ -97,22 +99,27 @@ All possible modes
 
 <img src="screens/phone.png" width="500">
 -------------------------
+
 #### MODE_HASHTAG
 
 <img src="screens/hashtag.png" width="500">
 -------------------------
+
 #### MODE_URL
 
 <img src="screens/url.png" width="500">
 -------------------------
+
 #### MODE_MENTION
 
 <img src="screens/mention.png" width="500">
 -------------------------
+
 #### MODE_EMAIL
 
 <img src="screens/gmail.png" width="500">
 -------------------------
+
 #### MODE_CUSTOM
 
 <img src="screens/custom.png" width="500">
