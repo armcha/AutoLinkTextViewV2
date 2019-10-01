@@ -38,7 +38,7 @@ The current minSDK version is API level 16.
 
 Gradle:
 ```groovy
-compile 'com.github.armcha:AutoLinkTextView:0.3.0'
+compile 'implementation 'com.github.armcha:AutoLinkTextViewV2:2.0.0''
 ```
 
 ### Setup and Usage
