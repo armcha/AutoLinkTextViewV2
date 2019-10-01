@@ -1,6 +1,7 @@
 # AutoLinkTextView V2
 
-AutoLinkTextViewV2 is the new version of the AutoLinkTextView.
+[1]: https://github.com/armcha/AutoLinkTextView
+AutoLinkTextViewV2 is the new version of the [AutoLinkTextView][1].
 
 **The main differences between the old and new version are**
 - Fully migration to Kotlin
@@ -38,7 +39,7 @@ The current minSDK version is API level 16.
 
 Gradle:
 ```groovy
-compile 'implementation 'com.github.armcha:AutoLinkTextViewV2:2.0.0''
+implementation 'com.github.armcha:AutoLinkTextViewV2:2.0.0'
 ```
 
 ### Setup and Usage
@@ -123,24 +124,6 @@ For use of custom mode add custom regex
 val custom = MODE_CUSTOM("\\sAndroid\\b")
 ```
 -------------------------
-You can also use multiple modes
-```kotlin
-autoLinkTextView.addAutoLinkMode(
-                MODE_HASHTAG,
-                MODE_URL,
-                MODE_EMAIL,
-                MODE_PHONE)
-```
--------------------------
-You can transform specific url to short text
-```kotlin
-autoLinkTextView.addUrlTransformations(
-                "https://google.com" to "Google",
-                "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS",
-                "https://github.com/armcha/AutoLinkTextViewV2" to "Github",
-                "https://en.wikipedia.org/wiki/Fire_OS" to "FIRE")
-```
--------------------------
 You can change text color for the specific mode
 ```kotlin
 autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color2)
@@ -150,6 +133,8 @@ autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
 ### Contact :book:
 
 :arrow_forward:  **Email**: chatikyana@gmail.com
+
+:arrow_forward:  **linkedin**: https://www.linkedin.com/in/chatikyan
 
 :arrow_forward:  **Medium**: https://medium.com/@chatikyan
 
