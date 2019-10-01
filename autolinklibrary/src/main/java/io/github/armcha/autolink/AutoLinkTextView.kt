@@ -9,11 +9,9 @@ import android.text.StaticLayout
 import android.text.TextUtils
 import android.text.style.CharacterStyle
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import java.lang.reflect.Field
-import kotlin.system.measureTimeMillis
 
 class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView(context, attrs) {
 
@@ -42,15 +40,12 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     }
 
     override fun setText(text: CharSequence, type: BufferType) {
-        if (TextUtils.isEmpty(text)) {
+        if (text.isEmpty() || modes.isNullOrEmpty()) {
             super.setText(text, type)
             return
         }
-        val time = measureTimeMillis {
-            val spannableString = makeSpannableString(text)
-            super.setText(spannableString, type)
-        }
-        Log.e("measureTimeMillis", "TIME $time")
+        val spannableString = makeSpannableString(text)
+        super.setText(spannableString, type)
     }
 
     fun addAutoLinkMode(vararg modes: Mode) {
@@ -71,12 +66,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
     private fun makeSpannableString(text: CharSequence): SpannableString {
 
-        var autoLinkItems: Set<AutoLinkItem> = HashSet()
-        val autoLinkItemsTime = measureTimeMillis {
-            autoLinkItems = matchedRanges(text)
-        }
-        Log.e("matchedRanges", "time $autoLinkItemsTime")
-
+        val autoLinkItems = matchedRanges(text)
         val transformedText = transformLinks(text, autoLinkItems)
         val spannableString = SpannableString(transformedText)
 
@@ -125,36 +115,36 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     }
 
     private fun matchedRanges(text: CharSequence): Set<AutoLinkItem> {
-        if (modes.isEmpty()) {
-            throw NullPointerException("Please add at least one mode")
-        }
-
         val autoLinkItems = mutableSetOf<AutoLinkItem>()
-        modes.sortedBy { it.modeName }
-                .forEach {
-                    val matcher = it.toPattern().matcher(text)
-                    while (matcher.find()) {
-                        val group = matcher.group()
-                        val startPoint = matcher.start()
-                        val endPoint = matcher.end()
-                        when (it) {
-                            is MODE_PHONE -> if (group.length > MIN_PHONE_NUMBER_LENGTH) {
-                                val item = AutoLinkItem(startPoint, endPoint, group, group, it)
-                                autoLinkItems.add(item)
-                            }
-                            else -> {
-                                val matchedText = if (it is MODE_URL && transformations.containsKey(group)) {
-                                    transformations[group] ?: group
-                                } else {
-                                    group
-                                }
-                                val item = AutoLinkItem(startPoint, endPoint, group,
-                                        transformedText = matchedText, mode = it)
-                                autoLinkItems.add(item)
-                            }
+        modes.forEach {
+            val matcher = it.toPattern().matcher(text)
+            while (matcher.find()) {
+                var group = matcher.group()
+                var startPoint = matcher.start()
+                val endPoint = matcher.end()
+                when (it) {
+                    is MODE_PHONE -> if (group.length > MIN_PHONE_NUMBER_LENGTH) {
+                        val item = AutoLinkItem(startPoint, endPoint, group, group, it)
+                        autoLinkItems.add(item)
+                    }
+                    else -> {
+                        val isUrl = it is MODE_URL
+                        if (isUrl) {
+                            startPoint += 1
+                            group = group.trimStart()
                         }
+                        val matchedText = if (isUrl && transformations.containsKey(group)) {
+                            transformations[group] ?: group
+                        } else {
+                            group
+                        }
+                        val item = AutoLinkItem(startPoint, endPoint, group,
+                                transformedText = matchedText, mode = it)
+                        autoLinkItems.add(item)
                     }
                 }
+            }
+        }
         return autoLinkItems
     }
 

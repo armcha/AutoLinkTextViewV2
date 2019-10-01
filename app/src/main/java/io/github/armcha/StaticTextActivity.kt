@@ -19,8 +19,8 @@ class StaticTextActivity : AppCompatActivity() {
         val custom = MODE_CUSTOM("\\sAndroid\\b")
         autoLinkTextView.addAutoLinkMode(
                 MODE_HASHTAG,
-                MODE_URL,
                 MODE_EMAIL,
+                MODE_URL,
                 MODE_PHONE,
                 custom,
                 MODE_MENTION)
