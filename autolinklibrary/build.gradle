@@ -31,8 +31,8 @@ repositories {
     mavenCentral()
 }
 
-version = "2.1.1"
-group = "com.github.armcha"
+version = "2.1.2"
+group = "io.github.armcha"
 publish {
     userOrg = 'armcha'
     artifactId = 'AutoLinkTextViewV2'

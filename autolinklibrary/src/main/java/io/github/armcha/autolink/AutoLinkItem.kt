@@ -1,10 +1,10 @@
 package io.github.armcha.autolink
 
 class AutoLinkItem(var startPoint: Int,
-                            var endPoint: Int,
-                            var originalText: String,
-                            var transformedText: String,
-                            val mode: Mode) {
+                   var endPoint: Int,
+                   var originalText: String,
+                   var transformedText: String,
+                   val mode: Mode) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -14,7 +14,5 @@ class AutoLinkItem(var startPoint: Int,
         return true
     }
 
-    override fun hashCode(): Int {
-        return endPoint
-    }
+    override fun hashCode() = endPoint
 }

@@ -8,7 +8,7 @@ AutoLinkTextViewV2 is the new version of the [AutoLinkTextView][1].
 - Added several new features
 - Some improvements and fixes
 
-**It supports automatic detection and click handlig for**
+**It supports automatic detection and click handling for**
 * Hashtags (#)
 * Mentions (@) 
 * URLs (http://)
@@ -39,7 +39,7 @@ The current minSDK version is API level 16.
 
 Gradle:
 ```groovy
-implementation 'com.github.armcha:AutoLinkTextViewV2:2.1.1'
+implementation 'io.github.armcha:AutoLinkTextViewV2:2.1.2'
 ```
 
 ### Setup and Usage
@@ -70,7 +70,7 @@ autoLinkTextView.addUrlTransformations(
                 "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS")
 ```
 
-Or you can attach urlProcessor and transform the url
+Or you can attach urlProcessor and transform it
 ```kotlin
 autoLinkTextView.attachUrlProcessor { originalUrl: String ->
     when {
