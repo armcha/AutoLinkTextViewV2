@@ -26,10 +26,16 @@ class StaticTextActivity : AppCompatActivity() {
                 MODE_MENTION)
 
         autoLinkTextView.addUrlTransformations(
-                "https://google.com" to "Google",
                 "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS",
-                "https://github.com/armcha/AutoLinkTextViewV2" to "Github",
                 "https://en.wikipedia.org/wiki/Fire_OS" to "FIRE")
+
+        autoLinkTextView.attachUrlProcessor {
+            when {
+                it.contains("google") -> "Google"
+                it.contains("github") -> "Github"
+                else -> it
+            }
+        }
 
         autoLinkTextView.addSpan(MODE_URL, StyleSpan(Typeface.ITALIC), UnderlineSpan())
         autoLinkTextView.addSpan(MODE_HASHTAG, UnderlineSpan(), TypefaceSpan("monospace"))

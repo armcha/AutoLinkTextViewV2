@@ -6,7 +6,6 @@ import android.text.DynamicLayout
 import android.text.SpannableString
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.StaticLayout
-import android.text.TextUtils
 import android.text.style.CharacterStyle
 import android.util.AttributeSet
 import android.view.View
@@ -22,11 +21,12 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     }
 
     private val spanMap = mutableMapOf<Mode, HashSet<CharacterStyle>>()
-    private var onAutoLinkClick: ((AutoLinkItem) -> Unit)? = null
     private val transformations = mutableMapOf<String, String>()
-    private val defaultSelectedColor = Color.LTGRAY
     private val modes = mutableSetOf<Mode>()
+    private var onAutoLinkClick: ((AutoLinkItem) -> Unit)? = null
+    private var urlProcessor: ((String) -> String)? = null
 
+    var pressedTextColor = Color.LTGRAY
     var mentionModeColor = DEFAULT_COLOR
     var hashTagModeColor = DEFAULT_COLOR
     var customModeColor = DEFAULT_COLOR
@@ -64,6 +64,10 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         transformations.putAll(pairs.toMap())
     }
 
+    fun attachUrlProcessor(processor: (String) -> String) {
+        urlProcessor = processor
+    }
+
     private fun makeSpannableString(text: CharSequence): SpannableString {
 
         val autoLinkItems = matchedRanges(text)
@@ -74,7 +78,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
             val mode = autoLinkItem.mode
             val currentColor = getColorByMode(mode)
 
-            val clickableSpan = object : TouchableSpan(currentColor, defaultSelectedColor) {
+            val clickableSpan = object : TouchableSpan(currentColor, pressedTextColor) {
                 override fun onClick(widget: View) {
                     onAutoLinkClick?.invoke(autoLinkItem)
                 }
@@ -132,6 +136,11 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
                         if (isUrl) {
                             startPoint += 1
                             group = group.trimStart()
+                            if (urlProcessor != null) {
+                                val transformedUrl = urlProcessor?.invoke(group) ?: group
+                                if (transformedUrl != group)
+                                    transformations[group] = transformedUrl
+                            }
                         }
                         val matchedText = if (isUrl && transformations.containsKey(group)) {
                             transformations[group] ?: group

@@ -6,7 +6,7 @@ AutoLinkTextViewV2 is the new version of the [AutoLinkTextView][1].
 **The main differences between the old and new version are**
 - Fully migration to Kotlin
 - Added several new features
-- Some imporvements and fixes 
+- Some improvements and fixes
 
 **It supports automatic detection and click handlig for**
 * Hashtags (#)
@@ -39,7 +39,7 @@ The current minSDK version is API level 16.
 
 Gradle:
 ```groovy
-implementation 'com.github.armcha:AutoLinkTextViewV2:2.0.1'
+implementation 'com.github.armcha:AutoLinkTextViewV2:2.1.1'
 ```
 
 ### Setup and Usage
@@ -63,12 +63,24 @@ autoLinkTextView.addAutoLinkMode(
                 MODE_URL)
 ```
 -----------------------
-Add url transformations for tansforming them to short clickable text
+Add url transformations for transforming them to short clickable text
 ```kotlin
 autoLinkTextView.addUrlTransformations(
                 "https://google.com" to "Google",
                 "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS")
 ```
+
+Or you can attach urlProcessor and transform the url
+```kotlin
+autoLinkTextView.attachUrlProcessor { originalUrl: String ->
+    when {
+        originalUrl.startsWith("https://en.wikipedia") -> "Wiki"
+        originalUrl.contains("android") -> "Android"
+        else -> originalUrl
+    }
+}
+```
+
 <img src="screens/transformation_before.png" width="400"> <img src="screens/transformation_after.png" width="400">
 -----------------------
 Add one or multiple spans to specific mode
@@ -129,12 +141,17 @@ You can change text color for the specific mode
 autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color2)
 autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
 ```
+-------------------------
+You can also change pressed text color
+```kotlin
+autoLinkTextView.pressedTextColor = ContextCompat.getColor(this, R.color.pressedTextColor)
+```
 
 ### Contact :book:
 
 :arrow_forward:  **Email**: chatikyana@gmail.com
 
-:arrow_forward:  **linkedin**: https://www.linkedin.com/in/chatikyan
+:arrow_forward:  **Linkedin**: https://www.linkedin.com/in/chatikyan
 
 :arrow_forward:  **Medium**: https://medium.com/@chatikyan
 

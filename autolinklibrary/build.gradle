@@ -31,7 +31,7 @@ repositories {
     mavenCentral()
 }
 
-version = "2.0.1"
+version = "2.1.1"
 group = "com.github.armcha"
 publish {
     userOrg = 'armcha'
