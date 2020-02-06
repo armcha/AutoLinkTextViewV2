@@ -134,7 +134,9 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
                     else -> {
                         val isUrl = it is MODE_URL
                         if (isUrl) {
-                            startPoint += 1
+                            if(startPoint > 0) {
+                                startPoint += 1
+                            }
                             group = group.trimStart()
                             if (urlProcessor != null) {
                                 val transformedUrl = urlProcessor?.invoke(group) ?: group
