@@ -36,11 +36,16 @@ class RecyclerViewActivity : AppCompatActivity() {
                 val autoLinkTextView = holder.itemView.autoLinkTextView
                 val context = holder.itemView.context
                 val custom = MODE_CUSTOM("\\sAndroid\\b")
+                val custom1 = MODE_CUSTOM("\\sapp\\b")
+                val custom2 = MODE_CUSTOM("\\sbased\\b")
                 autoLinkTextView.addAutoLinkMode(
                         MODE_HASHTAG,
                         MODE_URL,
                         MODE_PHONE,
                         MODE_EMAIL,
+
+                        custom1,
+                        custom2,
                         custom,
                         MODE_MENTION)
 

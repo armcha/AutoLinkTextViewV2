@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">AutoLinkTextView</string>
-    <string name="android_text">Android is a mobile operating system developed by https://google.com.
+    <string name="android_text">https://www.android.com/gms Android is a mobile operating system developed by https://google.com.
             It is based on a modified version of the @Linux kernel and other open source software,
             and is designed @primarily for touchscreen mobile devices such as smartphones and #tablets.
             In addition, https://github.com/armcha/AutoLinkTextViewV2 has developed Android TV for televisions, Android Auto for cars
@@ -16,7 +16,7 @@
             which use 801-691-7894 their own equivalents to Google Mobile Services.
     </string>
 
-    <string name="android_text_short">Android is a mobile operating system developed by https://google.com.
+    <string name="android_text_short">https://www.android.com/gms Android is a mobile operating system developed by https://google.com.
             It is based on a modified version of the @Linux kernel and other open source software,
             and is designed @primarily for touchscreen mobile devices such as smartphones and #tablets.
             \n\n In addition, https://google.com has developed Android TV for televisions, Android Auto for cars
