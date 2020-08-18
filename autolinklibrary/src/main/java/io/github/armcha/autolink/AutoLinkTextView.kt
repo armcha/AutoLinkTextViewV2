@@ -16,7 +16,8 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
     companion object {
         internal val TAG = AutoLinkTextView::class.java.simpleName
-        private const val MIN_PHONE_NUMBER_LENGTH = 8
+        private const val MIN_PHONE_NUMBER_LENGTH = 7
+        private const val MAX_PHONE_NUMBER_LENGTH = 15
         private const val DEFAULT_COLOR = Color.RED
     }
 
@@ -127,7 +128,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
                 var startPoint = matcher.start()
                 val endPoint = matcher.end()
                 when (it) {
-                    is MODE_PHONE -> if (group.length > MIN_PHONE_NUMBER_LENGTH) {
+                    is MODE_PHONE -> if (group.length in MIN_PHONE_NUMBER_LENGTH..MAX_PHONE_NUMBER_LENGTH) {
                         val item = AutoLinkItem(startPoint, endPoint, group, group, it)
                         autoLinkItems.add(item)
                     }
