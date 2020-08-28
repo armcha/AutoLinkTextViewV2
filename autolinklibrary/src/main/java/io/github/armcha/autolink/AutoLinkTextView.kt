@@ -40,6 +40,29 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         highlightColor = Color.TRANSPARENT
     }
 
+    /**
+     * Mention color by offset
+     * */
+    private val spanOffset = ArrayList<Pair<Int,Int>>()
+    private var mentionBackgroundColor: Int = 0
+    private var mentionTextColor: Int = 0
+    private var mentionCornerRadius: Float = 10f
+    private var mentionPaddingStart: Float = 20f
+    private var mentionPaddingEnd: Float = 20f
+    private var mentionMarginStart: Float = 20f
+
+    fun setMentionsByOffset(mentions:ArrayList<Pair<Int,Int>>,backgroundColor: Int,textColor: Int,cornerRadius: Float = 10f, paddingStart: Float= 20f,paddingEnd: Float= 20f,marginStart: Float= 20f){
+        this.spanOffset.addAll(mentions)
+        this.mentionBackgroundColor = backgroundColor
+        mentionTextColor = textColor
+
+        mentionCornerRadius = cornerRadius
+        mentionPaddingStart = paddingStart
+        mentionPaddingEnd = paddingEnd
+        mentionMarginStart = marginStart
+    }
+
+
     override fun setText(text: CharSequence, type: BufferType) {
         if (text.isEmpty() || modes.isNullOrEmpty()) {
             super.setText(text, type)
@@ -88,6 +111,13 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
             spannableString.addSpan(clickableSpan, autoLinkItem)
             spanMap[mode]?.forEach {
                 spannableString.addSpan(CharacterStyle.wrap(it), autoLinkItem)
+            }
+        }
+
+        spanOffset.forEach {
+            if(it.first>=0) {
+                val tagSpan = RoundedBackgroundSpan(hashTagModeColor, Color.WHITE, mentionCornerRadius, mentionPaddingStart, mentionPaddingEnd, mentionMarginStart)
+                spannableString.setSpan(tagSpan, it.first, it.second, SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
         return spannableString
