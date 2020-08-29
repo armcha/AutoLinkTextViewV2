@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +37,12 @@ class RecyclerViewActivity : AppCompatActivity() {
                 val autoLinkTextView = holder.itemView.autoLinkTextView
                 val context = holder.itemView.context
                 val custom = MODE_CUSTOM("\\sAndroid\\b")
+
+                autoLinkTextView.setMentionsByOffset(mentions = ArrayList<Pair<Int,Int>>().apply {
+                    add(Pair(0,12))
+                    add(Pair(13,23))
+                },backgroundColor = ContextCompat.getColor(context,R.color.color1),textColor = Color.WHITE,mentionStyle = Typeface.DEFAULT_BOLD)
+
                 autoLinkTextView.addAutoLinkMode(
                         MODE_HASHTAG,
                         MODE_URL,
@@ -60,6 +67,8 @@ class RecyclerViewActivity : AppCompatActivity() {
                 autoLinkTextView.phoneModeColor = ContextCompat.getColor(context, R.color.colorAccent)
 
                 val text = if (position % 2 == 0) R.string.android_text_short else R.string.android_text_short_second
+
+
                 autoLinkTextView.text = getString(text)
 
                 autoLinkTextView.onAutoLinkClick {
@@ -67,6 +76,9 @@ class RecyclerViewActivity : AppCompatActivity() {
                     else "Original text - ${it.originalText} \n\nTransformed text - ${it.transformedText}"
                     val url = if (it.mode is MODE_URL) it.originalText else null
                     showDialog(it.mode.modeName, message, url)
+                }
+                autoLinkTextView.onMentionOffsetClick{
+                    Toast.makeText(context,"${it.first} + ${it.second}",Toast.LENGTH_LONG).show()
                 }
             }
         }

@@ -10,6 +10,7 @@ import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
 import android.text.StaticLayout
 import android.text.style.CharacterStyle
+import android.text.style.ClickableSpan
 import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.View
@@ -29,6 +30,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     private val transformations = mutableMapOf<String, String>()
     private val modes = mutableSetOf<Mode>()
     private var onAutoLinkClick: ((AutoLinkItem) -> Unit)? = null
+    private var onMentionOffsetClick: ((Pair<Int,Int>) -> Unit)? = null
     private var urlProcessor: ((String) -> String)? = null
 
     var pressedTextColor = Color.LTGRAY
@@ -54,9 +56,9 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     private var mentionPaddingStart: Float = 20f
     private var mentionPaddingEnd: Float = 20f
     private var mentionMarginStart: Float = 20f
-    private var mentionStyle: StyleSpan = StyleSpan(BOLD)
+    private var mentionStyle: Typeface = Typeface.DEFAULT_BOLD
     fun setMentionsByOffset(mentions:ArrayList<Pair<Int,Int>>,backgroundColor: Int,textColor: Int,cornerRadius: Float = 10f, paddingStart: Float= 20f,paddingEnd: Float= 20f,marginStart: Float= 20f
-    , mentionStyle:StyleSpan
+    , mentionStyle:Typeface
     ){
         this.spanOffset.addAll(mentions)
         this.mentionBackgroundColor = backgroundColor
@@ -91,6 +93,10 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         onAutoLinkClick = body
     }
 
+    fun onMentionOffsetClick(body: (Pair<Int,Int>) -> Unit) {
+        onMentionOffsetClick = body
+    }
+
     fun addUrlTransformations(vararg pairs: Pair<String, String>) {
         transformations.putAll(pairs.toMap())
     }
@@ -123,9 +129,13 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
         spanOffset.forEach {
             if(it.first>=0 && it.second <= text.length) {
-                val tagSpan = RoundedBackgroundSpan(mentionBackgroundColor, mentionTextColor, mentionCornerRadius, mentionPaddingStart, mentionPaddingEnd, mentionMarginStart)
+                val tagSpan = RoundedBackgroundSpan(mentionStyle,mentionBackgroundColor, mentionTextColor, mentionCornerRadius, mentionPaddingStart, mentionPaddingEnd, mentionMarginStart)
                 spannableString.setSpan(tagSpan, it.first, it.second, SPAN_EXCLUSIVE_EXCLUSIVE)
-                spannableString.setSpan(mentionStyle,it.first, it.second, SPAN_INCLUSIVE_INCLUSIVE)
+                spannableString.setSpan(object:TouchableSpan(mentionTextColor, mentionTextColor){
+                    override fun onClick(widget: View) {
+                        onMentionOffsetClick?.invoke(it)
+                    }
+                }, it.first, it.second,SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
         return spannableString
