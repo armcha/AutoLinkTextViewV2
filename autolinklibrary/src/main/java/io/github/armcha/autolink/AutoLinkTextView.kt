@@ -2,11 +2,15 @@ package io.github.armcha.autolink
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.Typeface.BOLD
 import android.text.DynamicLayout
 import android.text.SpannableString
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
 import android.text.StaticLayout
 import android.text.style.CharacterStyle
+import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
@@ -50,8 +54,10 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     private var mentionPaddingStart: Float = 20f
     private var mentionPaddingEnd: Float = 20f
     private var mentionMarginStart: Float = 20f
-
-    fun setMentionsByOffset(mentions:ArrayList<Pair<Int,Int>>,backgroundColor: Int,textColor: Int,cornerRadius: Float = 10f, paddingStart: Float= 20f,paddingEnd: Float= 20f,marginStart: Float= 20f){
+    private var mentionStyle: StyleSpan = StyleSpan(BOLD)
+    fun setMentionsByOffset(mentions:ArrayList<Pair<Int,Int>>,backgroundColor: Int,textColor: Int,cornerRadius: Float = 10f, paddingStart: Float= 20f,paddingEnd: Float= 20f,marginStart: Float= 20f
+    , mentionStyle:StyleSpan
+    ){
         this.spanOffset.addAll(mentions)
         this.mentionBackgroundColor = backgroundColor
         mentionTextColor = textColor
@@ -60,6 +66,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         mentionPaddingStart = paddingStart
         mentionPaddingEnd = paddingEnd
         mentionMarginStart = marginStart
+        this.mentionStyle = mentionStyle
     }
 
 
@@ -115,9 +122,10 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         }
 
         spanOffset.forEach {
-            if(it.first>=0) {
-                val tagSpan = RoundedBackgroundSpan(hashTagModeColor, Color.WHITE, mentionCornerRadius, mentionPaddingStart, mentionPaddingEnd, mentionMarginStart)
+            if(it.first>=0 && it.second <= text.length) {
+                val tagSpan = RoundedBackgroundSpan(mentionBackgroundColor, mentionTextColor, mentionCornerRadius, mentionPaddingStart, mentionPaddingEnd, mentionMarginStart)
                 spannableString.setSpan(tagSpan, it.first, it.second, SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannableString.setSpan(mentionStyle,it.first, it.second, SPAN_INCLUSIVE_INCLUSIVE)
             }
         }
         return spannableString
