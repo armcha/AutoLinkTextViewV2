@@ -38,10 +38,14 @@ class RecyclerViewActivity : AppCompatActivity() {
                 val context = holder.itemView.context
                 val custom = MODE_CUSTOM("\\sAndroid\\b")
 
-                autoLinkTextView.setMentionsByOffset(mentions = ArrayList<Pair<Int,Int>>().apply {
-                    add(Pair(0,12))
-                    add(Pair(13,23))
-                },backgroundColor = ContextCompat.getColor(context,R.color.color1),textColor = Color.WHITE,mentionStyle = Typeface.DEFAULT_BOLD)
+                if(position%2==0){
+                    autoLinkTextView.setMentionsByOffset(mentions = ArrayList<Pair<Int,Int>>().apply {
+                        add(Pair(0,12))
+                        add(Pair(13,23))
+                    },backgroundColor = ContextCompat.getColor(context,R.color.color1),textColor = Color.WHITE,mentionStyle = Typeface.DEFAULT_BOLD)
+                }else{
+                    autoLinkTextView.setMentionsByOffset(mentions = ArrayList())
+                }
 
                 autoLinkTextView.addAutoLinkMode(
                         MODE_HASHTAG,

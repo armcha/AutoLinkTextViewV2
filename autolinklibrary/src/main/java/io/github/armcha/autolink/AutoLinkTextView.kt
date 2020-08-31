@@ -57,9 +57,10 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     private var mentionPaddingEnd: Float = 20f
     private var mentionMarginStart: Float = 20f
     private var mentionStyle: Typeface = Typeface.DEFAULT_BOLD
-    fun setMentionsByOffset(mentions:ArrayList<Pair<Int,Int>>,backgroundColor: Int,textColor: Int,cornerRadius: Float = 10f, paddingStart: Float= 20f,paddingEnd: Float= 20f,marginStart: Float= 20f
-    , mentionStyle:Typeface
+    fun setMentionsByOffset(mentions:ArrayList<Pair<Int,Int>> = ArrayList(), backgroundColor: Int = 0, textColor: Int = 0, cornerRadius: Float = 10f, paddingStart: Float= 20f, paddingEnd: Float= 20f, marginStart: Float= 20f
+                            , mentionStyle:Typeface = Typeface.DEFAULT
     ){
+        this.spanOffset.clear()
         this.spanOffset.addAll(mentions)
         this.mentionBackgroundColor = backgroundColor
         mentionTextColor = textColor
