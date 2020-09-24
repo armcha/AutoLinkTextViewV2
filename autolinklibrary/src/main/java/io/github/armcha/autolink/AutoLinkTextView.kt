@@ -177,9 +177,12 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
                 var startPoint = matcher.start()
                 val endPoint = matcher.end()
                 when (it) {
-                    is MODE_PHONE -> if (group.length in MIN_PHONE_NUMBER_LENGTH..MAX_PHONE_NUMBER_LENGTH) {
-                        val item = AutoLinkItem(startPoint, endPoint, group, group, it)
-                        autoLinkItems.add(item)
+                    is MODE_PHONE -> {
+                        val digits = group.replace("[^0-9]".toRegex(), "")
+                        if (digits.length in MIN_PHONE_NUMBER_LENGTH..MAX_PHONE_NUMBER_LENGTH) {
+                            val item = AutoLinkItem(startPoint, endPoint, group, group, it)
+                            autoLinkItems.add(item)
+                        }
                     }
                     else -> {
                         val isUrl = it is MODE_URL
