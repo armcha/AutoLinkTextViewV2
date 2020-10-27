@@ -2,11 +2,16 @@ package io.github.armcha.autolink
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.Typeface.BOLD
 import android.text.DynamicLayout
 import android.text.SpannableString
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+import android.text.Spanned.SPAN_INCLUSIVE_INCLUSIVE
 import android.text.StaticLayout
 import android.text.style.CharacterStyle
+import android.text.style.ClickableSpan
+import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
@@ -16,7 +21,8 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
     companion object {
         internal val TAG = AutoLinkTextView::class.java.simpleName
-        private const val MIN_PHONE_NUMBER_LENGTH = 8
+        private const val MIN_PHONE_NUMBER_LENGTH = 7
+        private const val MAX_PHONE_NUMBER_LENGTH = 15
         private const val DEFAULT_COLOR = Color.RED
     }
 
@@ -24,6 +30,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     private val transformations = mutableMapOf<String, String>()
     private val modes = mutableSetOf<Mode>()
     private var onAutoLinkClick: ((AutoLinkItem) -> Unit)? = null
+    private var onMentionOffsetClick: ((Pair<Int,Int>) -> Unit)? = null
     private var urlProcessor: ((String) -> String)? = null
 
     var pressedTextColor = Color.LTGRAY
@@ -38,6 +45,33 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         movementMethod = LinkTouchMovementMethod()
         highlightColor = Color.TRANSPARENT
     }
+
+    /**
+     * Mention color by offset
+     * */
+    private val spanOffset = ArrayList<Pair<Int,Int>>()
+    private var mentionBackgroundColor: Int = 0
+    private var mentionTextColor: Int = 0
+    private var mentionCornerRadius: Float = 10f
+    private var mentionPaddingStart: Float = 20f
+    private var mentionPaddingEnd: Float = 20f
+    private var mentionMarginStart: Float = 20f
+    private var mentionStyle: Typeface = Typeface.DEFAULT_BOLD
+    fun setMentionsByOffset(mentions:ArrayList<Pair<Int,Int>> = ArrayList(), backgroundColor: Int = 0, textColor: Int = 0, cornerRadius: Float = 10f, paddingStart: Float= 20f, paddingEnd: Float= 20f, marginStart: Float= 20f
+                            , mentionStyle:Typeface = Typeface.DEFAULT
+    ){
+        this.spanOffset.clear()
+        this.spanOffset.addAll(mentions)
+        this.mentionBackgroundColor = backgroundColor
+        mentionTextColor = textColor
+
+        mentionCornerRadius = cornerRadius
+        mentionPaddingStart = paddingStart
+        mentionPaddingEnd = paddingEnd
+        mentionMarginStart = marginStart
+        this.mentionStyle = mentionStyle
+    }
+
 
     override fun setText(text: CharSequence, type: BufferType) {
         if (text.isEmpty() || modes.isNullOrEmpty()) {
@@ -58,6 +92,10 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
 
     fun onAutoLinkClick(body: (AutoLinkItem) -> Unit) {
         onAutoLinkClick = body
+    }
+
+    fun onMentionOffsetClick(body: (Pair<Int,Int>) -> Unit) {
+        onMentionOffsetClick = body
     }
 
     fun addUrlTransformations(vararg pairs: Pair<String, String>) {
@@ -87,6 +125,18 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
             spannableString.addSpan(clickableSpan, autoLinkItem)
             spanMap[mode]?.forEach {
                 spannableString.addSpan(CharacterStyle.wrap(it), autoLinkItem)
+            }
+        }
+
+        spanOffset.forEach {
+            if(it.first>=0 && it.second <= text.length) {
+                val tagSpan = RoundedBackgroundSpan(mentionStyle,mentionBackgroundColor, mentionTextColor, mentionCornerRadius, mentionPaddingStart, mentionPaddingEnd, mentionMarginStart)
+                spannableString.setSpan(tagSpan, it.first, it.second, SPAN_EXCLUSIVE_EXCLUSIVE)
+                spannableString.setSpan(object:TouchableSpan(mentionTextColor, mentionTextColor){
+                    override fun onClick(widget: View) {
+                        onMentionOffsetClick?.invoke(it)
+                    }
+                }, it.first, it.second,SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
         return spannableString
@@ -127,9 +177,12 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
                 var startPoint = matcher.start()
                 val endPoint = matcher.end()
                 when (it) {
-                    is MODE_PHONE -> if (group.length > MIN_PHONE_NUMBER_LENGTH) {
-                        val item = AutoLinkItem(startPoint, endPoint, group, group, it)
-                        autoLinkItems.add(item)
+                    is MODE_PHONE -> {
+                        val digits = group.replace("[^0-9]".toRegex(), "")
+                        if (digits.length in MIN_PHONE_NUMBER_LENGTH..MAX_PHONE_NUMBER_LENGTH) {
+                            val item = AutoLinkItem(startPoint, endPoint, group, group, it)
+                            autoLinkItems.add(item)
+                        }
                     }
                     else -> {
                         val isUrl = it is MODE_URL
