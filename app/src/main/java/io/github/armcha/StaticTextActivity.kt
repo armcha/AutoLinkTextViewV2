@@ -16,7 +16,7 @@ class StaticTextActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_static_text)
 
-        val custom = MODE_CUSTOM("\\sAndroid\\b")
+        val custom = MODE_CUSTOM("\\sAndroid\\b", "\\smobile\\b")
         autoLinkTextView.addAutoLinkMode(
                 MODE_HASHTAG,
                 MODE_EMAIL,

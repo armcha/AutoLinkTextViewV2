@@ -34,4 +34,16 @@
             but AOSP has been used as the basis of competing Android ecosystems such as Amazons https://en.wikipedia.org/wiki/Fire_OS OS,
             which use 801-691-7894 their own equivalents to Google Mobile Services.
     </string>
+
+    <string name="text_third">#Cyberpunk 2077 is a 2020 action role-playing video game developed and published by CD Projekt.
+        The story takes place in Night City, an open world set in the Cyberpunk https://en.wikipedia.org/wiki/Cyberpunk_2077 universe.
+        Players assume the first-person perspective of a customisable mercenary known as V,
+        who can acquire skills in hacking and machinery with options for melee and ranged combat.
+        The game was developed using the #REDengine 4 by a team of around 500 people,
+        exceeding the number that worked on the studios previous game The Witcher 3: Wild Hunt (2015).
+        CD Projekt launched a new division in @Wrocław, @Poland, and partnered with Digital Scapes, Nvidia,
+        QLOC, and Jali Research to aid the production chatikyana@gmail.com. #Cyberpunk creator Mike Pondsmith was a consultant,
+        and actor Keanu Reeves has a starring role. The original score was led by Marcin Przybyłowicz,
+        featuring the contributions of several licensed artists.
+    </string>
 </resources>

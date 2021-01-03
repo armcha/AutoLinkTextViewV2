@@ -48,6 +48,7 @@ class RecyclerViewActivity : AppCompatActivity() {
 
                 autoLinkTextView.addUrlTransformations(
                         "https://google.com" to "Google",
+                        "https://en.wikipedia.org/wiki/Cyberpunk_2077" to "Cyberpunk",
                         "https://en.wikipedia.org/wiki/Fire_OS" to "FIRE",
                         "https://en.wikipedia.org/wiki/Wear_OS" to "Wear OS")
 
@@ -61,7 +62,11 @@ class RecyclerViewActivity : AppCompatActivity() {
                 autoLinkTextView.emailModeColor = ContextCompat.getColor(context, R.color.colorPrimary)
                 autoLinkTextView.phoneModeColor = ContextCompat.getColor(context, R.color.colorAccent)
 
-                val text = if (position % 2 == 0) R.string.android_text_short else R.string.android_text_short_second
+                val text = when {
+                    position % 3 == 1 -> R.string.android_text_short
+                    position % 3 == 2 -> R.string.android_text_short_second
+                    else -> R.string.text_third
+                }
 
                 autoLinkTextView.text = getString(text)
 

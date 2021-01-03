@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.Typeface.BOLD
+import android.os.Handler
 import android.text.DynamicLayout
 import android.text.SpannableString
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -13,6 +14,7 @@ import android.text.style.CharacterStyle
 import android.text.style.ClickableSpan
 import android.text.style.StyleSpan
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import java.lang.reflect.Field
@@ -30,7 +32,6 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     private val transformations = mutableMapOf<String, String>()
     private val modes = mutableSetOf<Mode>()
     private var onAutoLinkClick: ((AutoLinkItem) -> Unit)? = null
-    private var onMentionOffsetClick: ((Pair<Int, Int>) -> Unit)? = null
     private var urlProcessor: ((String) -> String)? = null
 
     var pressedTextColor = Color.LTGRAY
@@ -42,8 +43,8 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
     var urlModeColor = DEFAULT_COLOR
 
     init {
-        movementMethod = LinkTouchMovementMethod()
         highlightColor = Color.TRANSPARENT
+        movementMethod = LinkTouchMovementMethod()
     }
 
     override fun setText(text: CharSequence, type: BufferType) {
@@ -100,7 +101,7 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         return spannableString
     }
 
-    private fun transformLinks(text: CharSequence, autoLinkItems: Set<AutoLinkItem>): String {
+    private fun transformLinks(text: CharSequence, autoLinkItems: List<AutoLinkItem>): String {
         if (transformations.isEmpty())
             return text.toString()
 
@@ -126,43 +127,46 @@ class AutoLinkTextView(context: Context, attrs: AttributeSet? = null) : TextView
         return stringBuilder.toString()
     }
 
-    private fun matchedRanges(text: CharSequence): Set<AutoLinkItem> {
-        val autoLinkItems = mutableSetOf<AutoLinkItem>()
+    private fun matchedRanges(text: CharSequence): List<AutoLinkItem> {
+        val autoLinkItems = mutableListOf<AutoLinkItem>()
         modes.forEach {
-            val matcher = it.toPattern().matcher(text)
-            while (matcher.find()) {
-                var group = matcher.group()
-                var startPoint = matcher.start()
-                val endPoint = matcher.end()
-                when (it) {
-                    is MODE_PHONE -> {
-                        val digits = group.replace("[^0-9]".toRegex(), "")
-                        if (digits.length in MIN_PHONE_NUMBER_LENGTH..MAX_PHONE_NUMBER_LENGTH) {
-                            val item = AutoLinkItem(startPoint, endPoint, group, group, it)
+            val patterns = it.toPattern()
+            patterns.forEach { pattern ->
+                val matcher = pattern.matcher(text)
+                while (matcher.find()) {
+                    var group = matcher.group()
+                    var startPoint = matcher.start()
+                    val endPoint = matcher.end()
+                    when (it) {
+                        is MODE_PHONE -> {
+                            val digits = group.replace("[^0-9]".toRegex(), "")
+                            if (digits.length in MIN_PHONE_NUMBER_LENGTH..MAX_PHONE_NUMBER_LENGTH) {
+                                val item = AutoLinkItem(startPoint, endPoint, group, group, it)
+                                autoLinkItems.add(item)
+                            }
+                        }
+                        else -> {
+                            val isUrl = it is MODE_URL
+                            if (isUrl) {
+                                if (startPoint > 0) {
+                                    startPoint += 1
+                                }
+                                group = group.trimStart()
+                                if (urlProcessor != null) {
+                                    val transformedUrl = urlProcessor?.invoke(group) ?: group
+                                    if (transformedUrl != group)
+                                        transformations[group] = transformedUrl
+                                }
+                            }
+                            val matchedText = if (isUrl && transformations.containsKey(group)) {
+                                transformations[group] ?: group
+                            } else {
+                                group
+                            }
+                            val item = AutoLinkItem(startPoint, endPoint, group,
+                                    transformedText = matchedText, mode = it)
                             autoLinkItems.add(item)
                         }
-                    }
-                    else -> {
-                        val isUrl = it is MODE_URL
-                        if (isUrl) {
-                            if (startPoint > 0) {
-                                startPoint += 1
-                            }
-                            group = group.trimStart()
-                            if (urlProcessor != null) {
-                                val transformedUrl = urlProcessor?.invoke(group) ?: group
-                                if (transformedUrl != group)
-                                    transformations[group] = transformedUrl
-                            }
-                        }
-                        val matchedText = if (isUrl && transformations.containsKey(group)) {
-                            transformations[group] ?: group
-                        } else {
-                            group
-                        }
-                        val item = AutoLinkItem(startPoint, endPoint, group,
-                                transformedText = matchedText, mode = it)
-                        autoLinkItems.add(item)
                     }
                 }
             }
