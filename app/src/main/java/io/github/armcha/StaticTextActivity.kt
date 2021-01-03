@@ -41,7 +41,7 @@ class StaticTextActivity : AppCompatActivity() {
         autoLinkTextView.addSpan(MODE_HASHTAG, UnderlineSpan(), TypefaceSpan("monospace"))
         autoLinkTextView.addSpan(custom, StyleSpan(Typeface.BOLD))
 
-        autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color2)
+        autoLinkTextView.hashTagModeColor = ContextCompat.getColor(this, R.color.color5)
         autoLinkTextView.phoneModeColor = ContextCompat.getColor(this, R.color.color3)
         autoLinkTextView.customModeColor = ContextCompat.getColor(this, R.color.color1)
         autoLinkTextView.mentionModeColor = ContextCompat.getColor(this, R.color.color6)

@@ -38,15 +38,6 @@ class RecyclerViewActivity : AppCompatActivity() {
                 val context = holder.itemView.context
                 val custom = MODE_CUSTOM("\\sAndroid\\b")
 
-                if(position%2==0){
-                    autoLinkTextView.setMentionsByOffset(mentions = ArrayList<Pair<Int,Int>>().apply {
-                        add(Pair(0,12))
-                        add(Pair(13,23))
-                    },backgroundColor = ContextCompat.getColor(context,R.color.color1),textColor = Color.WHITE,mentionStyle = Typeface.DEFAULT_BOLD)
-                }else{
-                    autoLinkTextView.setMentionsByOffset(mentions = ArrayList())
-                }
-
                 autoLinkTextView.addAutoLinkMode(
                         MODE_HASHTAG,
                         MODE_URL,
@@ -72,7 +63,6 @@ class RecyclerViewActivity : AppCompatActivity() {
 
                 val text = if (position % 2 == 0) R.string.android_text_short else R.string.android_text_short_second
 
-
                 autoLinkTextView.text = getString(text)
 
                 autoLinkTextView.onAutoLinkClick {
@@ -80,9 +70,6 @@ class RecyclerViewActivity : AppCompatActivity() {
                     else "Original text - ${it.originalText} \n\nTransformed text - ${it.transformedText}"
                     val url = if (it.mode is MODE_URL) it.originalText else null
                     showDialog(it.mode.modeName, message, url)
-                }
-                autoLinkTextView.onMentionOffsetClick{
-                    Toast.makeText(context,"${it.first} + ${it.second}",Toast.LENGTH_LONG).show()
                 }
             }
         }
