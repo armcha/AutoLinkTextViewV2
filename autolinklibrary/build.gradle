@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
-apply plugin: 'guru.stefma.bintrayrelease'
+apply plugin: 'com.github.panpf.bintray-publish'
 
 android {
     compileSdkVersion 30
@@ -31,11 +31,11 @@ repositories {
     mavenCentral()
 }
 
-version = "3.0.0"
-group = "io.github.armcha"
 publish {
     userOrg = 'armcha'
+    groupId = 'com.github.armcha'
     artifactId = 'AutoLinkTextViewV2'
+    publishVersion = '3.0.0'
     desc = 'AutoLinkTextViewV2'
     website = 'https://github.com/armcha/AutoLinkTextViewV2'
 }

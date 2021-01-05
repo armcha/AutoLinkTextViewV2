@@ -11,10 +11,10 @@ AutoLinkTextViewV2 is the new version of the [AutoLinkTextView][1].
 **It supports automatic detection and click handling for**
 * Hashtags (#)
 * Mentions (@) 
-* URLs (http://)
+* URLs (https://)
 * Phone Numbers
 * Emails
-* Custom Regex
+* Multiple Custom Regex
 
 .<img src="screens/static.png" width="400">
 <img src="screens/static_gif.gif" width="400">
@@ -39,7 +39,7 @@ The current minSDK version is API level 16.
 
 Gradle:
 ```groovy
-implementation 'com.github.armcha:AutoLinkTextViewV2:2.1.1'
+implementation 'com.github.armcha:AutoLinkTextViewV2:3.0.0'
 ```
 
 ### Setup and Usage
